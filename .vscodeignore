@@ -1,0 +1,7 @@
+.vscode
+bin/*.map
+src
+haxe_libraries
+build.hxml
+haxelib.json
+test.sh

@@ -1,0 +1,26 @@
+{
+	"main": "bin/extension.js",
+	"name": "gd-lisp",
+	"description": "",
+	"repository": {
+		"url": "",
+		"type:": "git"
+	},
+	"homepage": "",
+	"categories": [],
+	"extensionPack": [],
+	"publisher": "kiss-lang",
+	"contributes": {},
+	"engines": {
+		"vscode": "^1.4.0"
+	},
+	"devDependencies": {
+		"@vscode/vsce": "^2.15.0"
+	},
+	"version": "0.0.0",
+	"activationEvents": [],
+	"displayName": "",
+	"dependencies": {
+		"jsdom": "^22.1.0"
+	}
+}

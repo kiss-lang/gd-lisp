@@ -1,0 +1,17 @@
+-lib kiss
+-cp src
+--each
+
+--interp
+--main
+gd_lisp.test.Main
+--next
+
+-lib kiss-vscode-api
+-js bin/extension.js
+-dce full
+-D analyzer-optimize
+-D js-es=6
+-debug
+gd_lisp.vscode.Main
+-cmd npx @vscode/vsce package
