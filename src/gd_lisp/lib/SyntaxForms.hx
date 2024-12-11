@@ -35,6 +35,7 @@ class SyntaxForms {
         // TODO this needs to be relative or compiled in
         syntaxForm("prelude", File.getContent("src/gd_lisp/lib/Prelude.gd"));
 
+        // Convert some gdlisp and add 'return' in front of the last resulting line
         syntaxForm("_return", {
             var code = g.convert(args[0]);
             var lines = code.split("\n");
@@ -44,7 +45,8 @@ class SyntaxForms {
             lines.join("\n") + '\n${lastLineTab}return ' + lastLineNoTab;
         });
 
-        // This seems the same as _return but it deals with expressions, not the finished text, and for some reason that matters
+        // This seems the same as _return but it puts the 'return' on the last un-converted expression, not the
+        // last line of finished text.
         syntaxForm("begin", {
             var code = '';
             var lastExp = args.pop(); 
