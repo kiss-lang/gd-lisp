@@ -5,8 +5,10 @@ import kiss.ReaderExp;
 import kiss.Stream;
 import sys.io.File;
 
+using gd_lisp.lib.GDLispState;
+
 class Generator {
-    var state:GDLispState;
+    var state:GDLispStateT;
 
     public function new() {
         state = {
@@ -15,8 +17,11 @@ class Generator {
             startOfFileReadTable: [],
             endOfFileReadTable: [],
             identAliases: [],
-            syntaxForms: SyntaxForms.builtins()
+            syntaxForms: SyntaxForms.builtins(),
+            tabLevel: ""
         };
+
+        var readTable = state.readTable;
     }
 
     function endGenerated(str:String) {
@@ -43,15 +48,17 @@ class Generator {
                 case None:
                     "";
             };
+            state.tabLevel = stream.currentTab();
             stream.dropStringIf('#');
         }
+
         findNextGDLisp();
         Reader.readAndProcessCC(stream, state, (nextExp, str, cc) -> {
             code += '#${str}\n';
             code += convert(nextExp);
             stream.dropUntil('#');
             stream.dropWhileOneOf(['\n', '#']);
-            code += endGenerated(str);
+            code += state.tabbed(endGenerated(str));
 
             findNextGDLisp();
             cc();
@@ -62,6 +69,17 @@ class Generator {
     }
 
     public function convert(exp:ReaderExp):String {
-        return 'bla';
+        var globalTab = state.tabLevel;
+        state.tabLevel = "";
+
+        var code = switch (exp.def) {
+            case CallExp({def:Symbol(name)}, args) if (state.syntaxForms.exists(name)):
+                state.syntaxForms[name](exp, args, state);
+            default:
+                "";
+        };
+
+        state.tabLevel = globalTab;
+        return state.tabbed(code);
     }
 }
