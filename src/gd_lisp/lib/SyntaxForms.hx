@@ -81,7 +81,7 @@ class SyntaxForms {
         });
         
         syntaxForm("times", {
-            arithmetic("+", args, g, Symbol('1'));
+            arithmetic("*", args, g, Symbol('1'));
         });
         return map;
     }
