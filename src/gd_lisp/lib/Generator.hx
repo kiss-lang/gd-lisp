@@ -5,21 +5,15 @@ import kiss.ReaderExp;
 import kiss.Stream;
 import sys.io.File;
 
+using kiss.ExpBuilder;
+using gd_lisp.lib.Generator;
 using gd_lisp.lib.GDLispState;
 
 class Generator {
     var state:GDLispStateT;
 
     public function new() {
-        state = {
-            readTable: Reader.builtins(),
-            startOfLineReadTable: [],
-            startOfFileReadTable: [],
-            endOfFileReadTable: [],
-            identAliases: [],
-            syntaxForms: SyntaxForms.builtins(),
-            tabLevel: ""
-        };
+        state = GDLispState.defaultState();
 
         var readTable = state.readTable;
     }
@@ -55,10 +49,11 @@ class Generator {
         findNextGDLisp();
         Reader.readAndProcessCC(stream, state, (nextExp, str, cc) -> {
             code += '#${str}\n';
-            code += convert(state, nextExp);
+            var converted = state.convert(nextExp);
+            code += converted;
             stream.dropUntil('#');
             stream.dropWhileOneOf(['\n', '#']);
-            code += state.tabbed(endGenerated(str));
+            code += state.tabbed(endGenerated(str + '\n' + converted));
 
             findNextGDLisp();
             cc();
@@ -72,9 +67,18 @@ class Generator {
         var globalTab = g.tabLevel;
         g.tabLevel = "";
 
+        var b = exp.expBuilder();
         var code = switch (exp.def) {
             case CallExp({def:Symbol(name)}, args) if (g.syntaxForms.exists(name)):
                 g.syntaxForms[name](exp, args.copy(), g);
+            case CallExp({def:Symbol(name)}, args) if (g.callAliases.exists(name)):
+                g.convert(b.call(b.expFromDef(g.callAliases[name]), args));
+            case CallExp({def:Symbol(name)}, args):
+                '$name(${[for(arg in args) g.convert(arg)].join(", ")})';
+            case Symbol(name) if (g.identAliases.exists(name)):
+                g.convert(b.expFromDef(g.identAliases[name]));
+            case Symbol(name):
+                name;
             default:
                 "";
         };

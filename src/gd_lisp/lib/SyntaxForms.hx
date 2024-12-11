@@ -3,6 +3,7 @@ package gd_lisp.lib;
 #if macro
 import haxe.macro.Expr;
 #end
+import sys.io.File;
 
 import kiss.Prelude;
 import kiss.ReaderExp;
@@ -24,8 +25,14 @@ class SyntaxForms {
         };
     }
 
+    // TODO add GENERATED before generated, change it to MODIFIED when the gdscript is directly modified
+    // and don't regenerated MODIFIED gdscript
+
     public static function builtins():Map<String,SyntaxFunction> {
         var map:Map<String,SyntaxFunction> = [];
+
+        // TODO this needs to be relative
+        syntaxForm("prelude", File.getContent("src/gd_lisp/lib/Prelude.gd"));
 
         var letNum = 0;
         syntaxForm("begin", {
@@ -46,6 +53,14 @@ class SyntaxForms {
             g.tab();
             code += g.convert(b.begin(args.slice(1)));
             code;
+        });
+
+        function arithmetic(op:String, args:Array<ReaderExp>, g:GDLispStateT) {
+            return args.map(g.convert).join(' ${op} ');
+        }
+
+        syntaxForm("plus", {
+            arithmetic("+", args, g);
         });
 
         return map;

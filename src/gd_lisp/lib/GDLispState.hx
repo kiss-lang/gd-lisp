@@ -1,15 +1,36 @@
 package gd_lisp.lib;
 
 import kiss.Reader;
+import kiss.ReaderExp;
 import gd_lisp.lib.SyntaxForms;
 
 typedef GDLispStateT = {
     > HasReadTables,
     tabLevel:String,
-    syntaxForms:Map<String,SyntaxFunction> 
+    callAliases:Map<String,ReaderExpDef>,
+    syntaxForms:Map<String,SyntaxFunction>
 };
 
 class GDLispState {
+    public static function defaultState():GDLispStateT {
+        return {
+            readTable: Reader.builtins(),
+            startOfLineReadTable: [],
+            startOfFileReadTable: [],
+            endOfFileReadTable: [],
+            identAliases: [],
+            callAliases: [
+                "print" => Symbol("_gdprint"),
+                "+" => Symbol("plus"),
+                "-" => Symbol("minus"),
+                "/" => Symbol("divide"),
+                "*" => Symbol("times")
+            ],
+            syntaxForms: SyntaxForms.builtins(),
+            tabLevel: ""
+        };
+    }
+
     public static function tab(g:GDLispStateT) {
         g.tabLevel += '\t';
     }
