@@ -44,6 +44,7 @@ class SyntaxForms {
             lines.join("\n") + '\n${lastLineTab}return ' + lastLineNoTab;
         });
 
+        // This seems the same as _return but it deals with expressions, not the finished text, and for some reason that matters
         syntaxForm("begin", {
             var code = '';
             var lastExp = args.pop(); 
