@@ -53,7 +53,7 @@ class Generator {
             code += converted;
             stream.dropUntil('#');
             stream.dropWhileOneOf(['\n', '#']);
-            code += state.tabbed(endGenerated(str + '\n' + converted));
+            code += state.tabbed(endGenerated(str + '\n' + converted)) + '\n';
 
             findNextGDLisp();
             cc();
@@ -63,7 +63,7 @@ class Generator {
         return code;
     }
 
-    public static function convert(g: GDLispStateT, exp:ReaderExp):String {
+    public static function convert(g: GDLispStateT, exp:ReaderExp, _inline = false):String {
         var globalTab = g.tabLevel;
         g.tabLevel = "";
 
@@ -84,6 +84,10 @@ class Generator {
         };
 
         g.tabLevel = globalTab;
-        return g.tabbed(code);
+        return if (_inline) {
+            code;
+        } else {
+            g.tabbed(code);
+        }
     }
 }

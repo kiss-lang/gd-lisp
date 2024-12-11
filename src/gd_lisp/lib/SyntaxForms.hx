@@ -49,20 +49,40 @@ class SyntaxForms {
             var b = wholeExp.expBuilder();
             var bindings = Prelude.groups(Prelude.bindingList(args[0], "let"), 2);
 
-            var code = 'func _let${letNum++}(${[for (binding in bindings) Prelude.symbolNameValue(binding[0])].join(", ")}):\n';
+            var code = 'func _let${letNum}(${[for (binding in bindings) Prelude.symbolNameValue(binding[0])].join(", ")}):\n';
             g.tab();
             code += g.convert(b.begin(args.slice(1)));
+            g.untab();
+            code += '\n';
+            code += '_let${letNum++}(${[for (binding in bindings) g.convert(binding[1], true)].join(", ")})';
             code;
         });
 
-        function arithmetic(op:String, args:Array<ReaderExp>, g:GDLispStateT) {
-            return args.map(g.convert).join(' ${op} ');
+        function arithmetic(op:String, args:Array<ReaderExp>, g:GDLispStateT, defaultFirst:ReaderExpDef) {
+            if (args.length == 1) {
+                var b = args[0].expBuilder();
+                args.unshift(b.expFromDef(defaultFirst));
+            } else if (args.length == 0) {
+                throw 'arithmetic wtih no arguments';
+            }
+            return '(' + args.map(g.convert.bind(_, true)).join(' ${op} ') + ')';
         }
 
         syntaxForm("plus", {
-            arithmetic("+", args, g);
+            arithmetic("+", args, g, Symbol('0'));
         });
 
+        syntaxForm("minus", {
+            arithmetic("-", args, g, Symbol('0'));
+        });
+        
+        syntaxForm("divide", {
+            arithmetic("/", args, g, Symbol('1'));
+        });
+        
+        syntaxForm("times", {
+            arithmetic("+", args, g, Symbol('1'));
+        });
         return map;
     }
 }
