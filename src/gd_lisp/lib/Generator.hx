@@ -5,6 +5,7 @@ import kiss.ReaderExp;
 import kiss.Stream;
 import sys.io.File;
 
+using StringTools;
 using kiss.ExpBuilder;
 using gd_lisp.lib.Generator;
 using gd_lisp.lib.GDLispState;
@@ -59,6 +60,7 @@ class Generator {
             cc();
         });
 
+        code = code.trim();
         File.saveContent(file, code);
         return code;
     }

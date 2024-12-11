@@ -8,6 +8,7 @@ import sys.io.File;
 import kiss.Prelude;
 import kiss.ReaderExp;
 import gd_lisp.lib.GDLispState;
+using StringTools;
 using kiss.ExpBuilder;
 using gd_lisp.lib.GDLispState;
 using gd_lisp.lib.Generator;
@@ -31,10 +32,18 @@ class SyntaxForms {
     public static function builtins():Map<String,SyntaxFunction> {
         var map:Map<String,SyntaxFunction> = [];
 
-        // TODO this needs to be relative
+        // TODO this needs to be relative or compiled in
         syntaxForm("prelude", File.getContent("src/gd_lisp/lib/Prelude.gd"));
 
-        var letNum = 0;
+        syntaxForm("_return", {
+            var code = g.convert(args[0]);
+            var lines = code.split("\n");
+            var lastLine = lines.pop();
+            var lastLineNoTab = lastLine.ltrim();
+            var lastLineTab = lastLine.substr(0, lastLine.length - lastLineNoTab.length);
+            lines.join("\n") + '\n${lastLineTab}return ' + lastLineNoTab;
+        });
+
         syntaxForm("begin", {
             var code = '';
             var lastExp = args.pop(); 
@@ -45,6 +54,7 @@ class SyntaxForms {
             return code;
         });
 
+        var letNum = 0;
         syntaxForm("let", {
             var b = wholeExp.expBuilder();
             var bindings = Prelude.groups(Prelude.bindingList(args[0], "let"), 2);

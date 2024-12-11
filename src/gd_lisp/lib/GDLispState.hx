@@ -24,7 +24,8 @@ class GDLispState {
                 "+" => Symbol("plus"),
                 "-" => Symbol("minus"),
                 "/" => Symbol("divide"),
-                "*" => Symbol("times")
+                "*" => Symbol("times"),
+                "return" => Symbol("_return")
             ],
             syntaxForms: SyntaxForms.builtins(),
             tabLevel: ""
