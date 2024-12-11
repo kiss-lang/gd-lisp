@@ -28,10 +28,23 @@ class SyntaxForms {
         var map:Map<String,SyntaxFunction> = [];
 
         var letNum = 0;
+        syntaxForm("begin", {
+            var code = '';
+            var lastExp = args.pop(); 
+            for (exp in args) {
+                code += g.convert(exp) + '\n';
+            }
+            code += 'return ' + g.convert(lastExp);
+            return code;
+        });
+
         syntaxForm("let", {
-            var code = 'func _let${letNum++}():\n';
+            var b = wholeExp.expBuilder();
+            var bindings = Prelude.groups(Prelude.bindingList(args[0], "let"), 2);
+
+            var code = 'func _let${letNum++}(${[for (binding in bindings) Prelude.symbolNameValue(binding[0])].join(", ")}):\n';
             g.tab();
-            code += g.tabbed('pass');
+            code += g.convert(b.begin(args.slice(1)));
             code;
         });
 
