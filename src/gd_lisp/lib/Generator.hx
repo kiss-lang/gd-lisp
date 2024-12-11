@@ -55,7 +55,7 @@ class Generator {
         findNextGDLisp();
         Reader.readAndProcessCC(stream, state, (nextExp, str, cc) -> {
             code += '#${str}\n';
-            code += convert(nextExp);
+            code += convert(state, nextExp);
             stream.dropUntil('#');
             stream.dropWhileOneOf(['\n', '#']);
             code += state.tabbed(endGenerated(str));
@@ -68,18 +68,18 @@ class Generator {
         return code;
     }
 
-    public function convert(exp:ReaderExp):String {
-        var globalTab = state.tabLevel;
-        state.tabLevel = "";
+    public static function convert(g: GDLispStateT, exp:ReaderExp):String {
+        var globalTab = g.tabLevel;
+        g.tabLevel = "";
 
         var code = switch (exp.def) {
-            case CallExp({def:Symbol(name)}, args) if (state.syntaxForms.exists(name)):
-                state.syntaxForms[name](exp, args, state);
+            case CallExp({def:Symbol(name)}, args) if (g.syntaxForms.exists(name)):
+                g.syntaxForms[name](exp, args.copy(), g);
             default:
                 "";
         };
 
-        state.tabLevel = globalTab;
-        return state.tabbed(code);
+        g.tabLevel = globalTab;
+        return g.tabbed(code);
     }
 }

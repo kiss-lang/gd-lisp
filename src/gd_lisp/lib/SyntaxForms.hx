@@ -4,9 +4,12 @@ package gd_lisp.lib;
 import haxe.macro.Expr;
 #end
 
+import kiss.Prelude;
 import kiss.ReaderExp;
 import gd_lisp.lib.GDLispState;
+using kiss.ExpBuilder;
 using gd_lisp.lib.GDLispState;
+using gd_lisp.lib.Generator;
 
 // Syntax forms convert Kiss reader expressions into GDScript
 typedef SyntaxFunction = (wholeExp:ReaderExp, args:Array<ReaderExp>, g: GDLispStateT) -> String;
