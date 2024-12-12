@@ -58,9 +58,12 @@ class Generator {
             switch (stream.takeOneOf(terminators)) {
                 // EOF or another gdlisp expression! Keep the existing stuff
                 case None | Some('#('):
-                // Got to another block
-                default:
+                // End of generated block!
+                case Some('###'):
+                    stream.dropUntil('\n');
+                    stream.dropString('\n');
                     gdlispExisting = None;
+                default:
             };
 
             stream.dropWhileOneOf(['\n', '#']);
