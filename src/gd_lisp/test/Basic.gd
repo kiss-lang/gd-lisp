@@ -1,20 +1,19 @@
-#(prelude)
-func _gdprint(v):
-    print(v)
-    return v
-#################
+extends MainLoop
 
-func gdfunc():
-	#(return (let [a 5 b 6] (print (+ a b)) (print (- a))))
-	func _let0(a, b):
-		_gdprint((a + b))
-		return _gdprint((0 - a))
-	return _let0(5, 6)	
-	#######################################################
+#(prelude)
+# (print <...>) is an alias for this
+func _gdprint(v):
+	print(v)
+	return v
+
+# (assertEq <expected> <actual>)
+func assertEquals(expected, actual):
+	assert(expected == actual, 'Expected {} but it was {}'.format([expected, actual], "{}"))
+
+func assertEq(e, a):
+	assertEquals(e, a)
+#########################################################################################
+
 	
-	
-	
-	
-	
-func _ready():
-	assert(gdfunc() == -8)
+func _initialize():
+	assertEq(6,6)

@@ -52,7 +52,7 @@ class Generator {
             code += '#${str}\n';
             var converted = state.convert(nextExp);
             code += converted;
-            stream.dropUntil('#');
+            stream.dropUntil('###');
             stream.dropWhileOneOf(['\n', '#']);
             code += state.tabbed(endGenerated(str + '\n' + converted)) + '\n';
 
