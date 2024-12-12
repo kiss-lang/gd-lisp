@@ -11,3 +11,10 @@ func gdfunc():
 		return _gdprint((0 - a))
 	return _let0(5, 6)	
 	#######################################################
+	
+	
+	
+	
+	
+func _ready():
+	assert(gdfunc() == -8)

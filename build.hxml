@@ -1,11 +1,9 @@
 -lib kiss
 -cp src
 --each
+# TODO build the command-line scripts that godot/VSCode will call as subprocesses
 
---interp
---main
-gd_lisp.test.Main
---next
+#--next
 
 -lib kiss-vscode-api
 -js bin/extension.js
