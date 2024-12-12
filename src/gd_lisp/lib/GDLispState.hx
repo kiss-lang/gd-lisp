@@ -4,13 +4,14 @@ import kiss.Reader;
 import kiss.ReaderExp;
 import kiss.Stream;
 import gd_lisp.lib.SyntaxForms;
+using gd_lisp.lib.GDLispState;
 
 typedef GDLispStateT = {
     > HasReadTables,
     tabLevel:String,
     callAliases:Map<String,ReaderExpDef>,
     syntaxForms:Map<String,SyntaxFunction>,
-    contextStack:kiss.List<Context>
+    contextStack:Array<Context>
 };
 
 enum Context {
@@ -59,7 +60,8 @@ class GDLispState {
     }
 
     public static function context(g:GDLispStateT) {
-        return g.contextStack[-1];
+        trace(g.contextStack);
+        return g.contextStack[g.contextStack.length - 1];
     }
 
     public static function pushContext(g:GDLispStateT, context:Context) {
@@ -67,10 +69,22 @@ class GDLispState {
     }
 
     public static function tryPopContext(g:GDLispStateT) {
-        return if (g.contextStack.length > 0) {
+        return if (g.contextStack.length > 1) {
+            trace(g.context());
             g.contextStack.pop();
         } else {
             None;
+        };
+    }
+
+    public static function popContextPrefix(g:GDLispStateT) {
+        return switch(g.tryPopContext()) {
+            case Return:
+                'return ';
+            case Capture(varName):
+                'var $varName = ';
+            default:
+                '';
         };
     }
 }

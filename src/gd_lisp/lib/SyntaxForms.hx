@@ -63,17 +63,17 @@ class SyntaxForms {
             var code = '';
             g.pushContext(Capture(Prelude.symbolNameValue(args[0])));
             code += g.convert(args[1]);
-            g.tryPopContext();
 
             code;
         });
 
+        var setNum = 0;
         syntaxForm("set", {
             var code = "";
-            g.pushContext(Capture("_set_value"));
+            g.pushContext(Capture('_set_val${setNum}'));
             code += g.convert(args[1]);
             g.tryPopContext();
-            code += Prelude.symbolNameValue(args[0]) + ' = _set_value';
+            code += Prelude.symbolNameValue(args[0]) + ' = _set_val${setNum++}';
 
             code;
         });
@@ -99,9 +99,11 @@ class SyntaxForms {
                 var b = args[0].expBuilder();
                 args.unshift(b.expFromDef(defaultFirst));
             } else if (args.length == 0) {
-                throw 'arithmetic wtih no arguments';
+                throw 'arithmetic with no arguments';
             }
-            return '(' + args.map(g.convert.bind(_, true)).join(' ${op} ') + ')';
+            var argStartIdx = Generator.argNum;
+            var code = g.captureArgs(args);
+            return '${code}\n${g.popContextPrefix()}(' + [for (idx in argStartIdx... Generator.argNum) '_arg${idx}'].join(' ${op} ') + ')';
         }
 
         syntaxForm("plus", {

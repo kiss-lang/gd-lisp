@@ -84,7 +84,17 @@ class Generator {
         return code;
     }
 
-    static var argNum = 0;
+    public static var argNum(default, null) = 0;
+    public static function captureArgs(g:GDLispStateT, args:Array<ReaderExp>) {
+        var code = '';
+
+        for (arg in args) {
+            g.pushContext(Capture('_arg${argNum++}'));
+            code += g.convert(arg);
+        }
+        return code;
+    }
+
     public static function convert(g: GDLispStateT, exp:ReaderExp, _inline = false):String {
         var globalTab = g.tabLevel;
         g.tabLevel = "";
@@ -101,26 +111,14 @@ class Generator {
             case Symbol(name) if (g.identAliases.exists(name)):
                 code += g.convert(b.expFromDef(g.identAliases[name]));
             default:
-                switch(g.context()) {
-                    case Return:
-                        code = 'return ' + code;
-                    case Capture(varName):
-                        code = 'var $varName = ';
-                    default:
-                }
-
                 // Basic expressions
                 switch (exp.def) {
                     case CallExp({def:Symbol(name)}, args):
                         var argStartIdx = argNum;
-                        for (arg in args) {
-                            g.pushContext(Capture('_arg${argNum++}'));
-                            code += g.convert(arg);
-                            g.tryPopContext();
-                        }
-                        code += '$name(${[for(idx in argStartIdx...argNum) '_arg${idx}'].join(", ")})';
+                        code += g.captureArgs(args);
+                        code += g.popContextPrefix() + '$name(${[for(idx in argStartIdx...argNum) '_arg${idx}'].join(", ")})';
                     case Symbol(name):
-                        code += name;
+                        code += g.popContextPrefix() + name;
                     default:
                         throw 'expression ${Reader.toString(exp.def)} cannot be converted!';
                 }

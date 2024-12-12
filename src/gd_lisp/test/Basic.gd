@@ -32,4 +32,12 @@ func _initialize():
 	var _arg5 = test_var
 	assertEquals(_arg4, _arg5)
 	###########################
+	#(set test_var (+ 5 6 7))
+	var _arg6 = 5
+	var _arg7 = 6
+	var _arg8 = 7
+	
+	var _set_val0 = (_arg6 + _arg7 + _arg8)
+	test_var = _set_val0
+	########################################
 	quit()
