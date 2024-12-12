@@ -6,6 +6,3 @@ func _gdprint(v):
 # (assertEq <expected> <actual>)
 func assertEquals(expected, actual):
 	assert(expected == actual, 'Expected {} but it was {}'.format([expected, actual], "{}"))
-
-func assertEq(e, a):
-	assertEquals(e, a)

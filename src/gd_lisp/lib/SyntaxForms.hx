@@ -35,26 +35,28 @@ class SyntaxForms {
         // TODO this needs to be relative or compiled in
         syntaxForm("prelude", File.getContent("src/gd_lisp/lib/Prelude.gd"));
 
-        // Convert some gdlisp and add 'return' in front of the last resulting line
-        syntaxForm("_return", {
-            var code = g.convert(args[0]);
-            var lines = code.split("\n");
-            var lastLine = lines.pop();
-            var lastLineNoTab = lastLine.ltrim();
-            var lastLineTab = lastLine.substr(0, lastLine.length - lastLineNoTab.length);
-            lines.join("\n") + '\n${lastLineTab}return ' + lastLineNoTab;
-        });
-
-        // This seems the same as _return but it puts the 'return' on the last un-converted expression, not the
-        // last line of finished text.
+        // Convert an array of expressions. Only pass the current context to the last expression,
+        // and pop the current context
         syntaxForm("begin", {
+            var context = g.context();
             var code = '';
-            var lastExp = args.pop(); 
+            var lastExp = args.pop();
+            g.pushContext(None);
             for (exp in args) {
                 code += g.convert(exp) + '\n';
             }
-            code += 'return ' + g.convert(lastExp);
+            g.tryPopContext();
+            code += g.convert(lastExp) + '\n';
+            g.tryPopContext();
             return code;
+        });
+
+        // Return an expression
+        syntaxForm("_return", {
+            g.pushContext(Return);
+            var code = g.convert(args[0]);
+            g.tryPopContext();
+            code;
         });
 
         var letNum = 0;
@@ -67,6 +69,13 @@ class SyntaxForms {
             code += g.convert(b.begin(args.slice(1)));
             g.untab();
             code += '\n';
+
+            switch (g.context()) {
+                case Return:
+                    code += 'return ';
+                default:
+            }
+
             code += '_let${letNum++}(${[for (binding in bindings) g.convert(binding[1], true)].join(", ")})';
             code;
         });

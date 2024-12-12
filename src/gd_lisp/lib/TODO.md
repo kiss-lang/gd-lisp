@@ -1,13 +1,20 @@
-- [ ] Run test-cases from command line
+- [x] Run test-cases from command line
 
+- [ ] Redesign, implement, test, `begin` and `return` forms
+
+- [ ] fix `let` form
+- [ ] `var`
+- [ ] `func`
+- [ ] `set`
+
+- [ ] Document forms and check their arg number
 - [ ] Add GENERATED, MODIFIED tags to blocks
-- [ ] Remove begin, because it is incorrect. _return is better
 - [ ] Operator =
 - [ ] Operators <, <=, >, >=
-- [ ] if
+- [ ] `if`
 - [ ] Pass context into syntaxforms, so (return (if ...)) can return the result of both branches
-- [ ] ifLet
-- [ ] case
+- [ ] `ifLet`
+- [ ] `case`
 - [ ] Algebraic data types
 - [ ] string multiplication
 - [ ] += etc.

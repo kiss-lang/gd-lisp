@@ -26,7 +26,7 @@ class Generator {
                 longestLine = line.length;
             }
         }
-        return '\n' + [for (_ in 0...longestLine) "#"].join("") + '\n';
+        return [for (_ in 0...longestLine) "#"].join("");
     }
 
     public function generate(file:String) {
@@ -54,13 +54,13 @@ class Generator {
             code += converted;
             stream.dropUntil('###');
             stream.dropWhileOneOf(['\n', '#']);
-            code += state.tabbed(endGenerated(str + '\n' + converted)) + '\n';
+            code += state.tabbed(endGenerated(str + '\n' + converted));
+            code += '\n';
 
             findNextGDLisp();
             cc();
         });
 
-        code = code.trim();
         File.saveContent(file, code);
         return code;
     }
@@ -70,26 +70,39 @@ class Generator {
         g.tabLevel = "";
 
         var b = exp.expBuilder();
-        var code = switch (exp.def) {
+
+        var code = "";
+        switch (exp.def) {
+            // Special expressions
             case CallExp({def:Symbol(name)}, args) if (g.syntaxForms.exists(name)):
-                g.syntaxForms[name](exp, args.copy(), g);
+                code += g.syntaxForms[name](exp, args.copy(), g);
             case CallExp({def:Symbol(name)}, args) if (g.callAliases.exists(name)):
-                g.convert(b.call(b.expFromDef(g.callAliases[name]), args));
-            case CallExp({def:Symbol(name)}, args):
-                '$name(${[for(arg in args) g.convert(arg)].join(", ")})';
+                code += g.convert(b.call(b.expFromDef(g.callAliases[name]), args));
             case Symbol(name) if (g.identAliases.exists(name)):
-                g.convert(b.expFromDef(g.identAliases[name]));
-            case Symbol(name):
-                name;
+                code += g.convert(b.expFromDef(g.identAliases[name]));
             default:
-                "";
+                switch(g.context()) {
+                    case Return:
+                        code = 'return ' + code;
+                    default:
+                }
+
+                // Basic expressions
+                code += switch (exp.def) {
+                    case CallExp({def:Symbol(name)}, args):
+                        '$name(${[for(arg in args) g.convert(arg, true)].join(", ")})';
+                    case Symbol(name):
+                        name;
+                    default:
+                        throw 'expression ${Reader.toString(exp.def)} cannot be converted!';
+                }
         };
 
         g.tabLevel = globalTab;
         return if (_inline) {
-            code;
+            code.rtrim();
         } else {
-            g.tabbed(code);
+            g.tabbed(code).rtrim() + '\n';
         }
     }
 }

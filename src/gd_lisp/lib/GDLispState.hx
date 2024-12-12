@@ -8,8 +8,14 @@ typedef GDLispStateT = {
     > HasReadTables,
     tabLevel:String,
     callAliases:Map<String,ReaderExpDef>,
-    syntaxForms:Map<String,SyntaxFunction>
+    syntaxForms:Map<String,SyntaxFunction>,
+    contextStack:kiss.List<Context>
 };
+
+enum Context {
+    None;
+    Return;
+}
 
 class GDLispState {
     public static function defaultState():GDLispStateT {
@@ -25,10 +31,12 @@ class GDLispState {
                 "-" => Symbol("minus"),
                 "/" => Symbol("divide"),
                 "*" => Symbol("times"),
-                "return" => Symbol("_return")
+                "return" => Symbol("_return"),
+                "assertEq" => Symbol("assertEquals"),
             ],
             syntaxForms: SyntaxForms.builtins(),
-            tabLevel: ""
+            tabLevel: "",
+            contextStack: [ None ]
         };
     }
 
@@ -40,5 +48,21 @@ class GDLispState {
     }
     public static function tabbed(g:GDLispStateT, code:String) {
         return [for (line in code.split("\n")) g.tabLevel + line].join("\n");
+    }
+
+    public static function context(g:GDLispStateT) {
+        return g.contextStack[-1];
+    }
+
+    public static function pushContext(g:GDLispStateT, context:Context) {
+        g.contextStack.push(context);
+    }
+
+    public static function tryPopContext(g:GDLispStateT) {
+        return if (g.contextStack.length > 0) {
+            g.contextStack.pop();
+        } else {
+            None;
+        };
     }
 }
