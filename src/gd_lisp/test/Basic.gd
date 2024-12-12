@@ -1,4 +1,4 @@
-extends MainLoop
+extends SceneTree
 
 #(prelude)
 # (print <...>) is an alias for this
@@ -17,3 +17,5 @@ func assertEq(e, a):
 	
 func _initialize():
 	assertEq(6,6)
+
+	quit()
