@@ -52,10 +52,26 @@ class Generator {
             code += '#${str}\n';
             var converted = state.convert(nextExp);
             code += converted;
-            stream.dropUntil('###');
+            
+            var terminators = ['###', '#('];
+            var gdlispExisting = stream.takeUntilOneOf(terminators, true);
+            switch (stream.takeOneOf(terminators)) {
+                // EOF or another gdlisp expression! Keep the existing stuff
+                case None | Some('#('):
+                // Got to another block
+                default:
+                    gdlispExisting = None;
+            };
+
             stream.dropWhileOneOf(['\n', '#']);
             code += state.tabbed(endGenerated(str + '\n' + converted));
             code += '\n';
+
+            switch(gdlispExisting) {
+                case Some(gdlisp):
+                    code += gdlisp.rtrim() + '\n';
+                default:
+            }
 
             findNextGDLisp();
             cc();

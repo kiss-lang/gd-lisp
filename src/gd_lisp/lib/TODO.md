@@ -2,7 +2,7 @@
 
 - [x] allow multi-line blocks
 - [x] `var`
-- [ ] gdscript lines at the end are getting clobbered somehow
+- [x] gdscript lines at the end are getting clobbered somehow
 - [ ] fix + to capture args first
 - [ ] `set`
 
@@ -22,8 +22,12 @@
 - [ ] Algebraic data types
 - [ ] string multiplication
 - [ ] += etc.
+- [ ] $ reader macro
 
 - [ ] Make prelude compiled in/relative
 - [ ] Make gd-lisp run from command line as either compiled node or python
 - [ ] Make gd-lisp run in Godot editor
 - [ ] Make gd-lisp run in VSCode
+
+- [ ] collapse the generated blocks in VScode
+- [ ] collapse the generated blocks in Godot editor
