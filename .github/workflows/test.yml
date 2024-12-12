@@ -1,0 +1,29 @@
+name: Test
+
+on: [push, pull_request]
+
+jobs:
+  test-core:
+    strategy:
+      fail-fast: false
+      matrix:
+        godot_version:
+          - 4.3
+        node-version:
+          - 14
+        os:
+          - ubuntu-latest
+    runs-on: ${{ matrix.os }}
+    container:
+      image: barichello/godot-ci:${{ matrix.godot_version }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+      - run: npm install -g yarn
+      - uses: lix-pm/setup-lix@master
+        with:
+          lix-version: 15.12.0
+      - run: lix download
+      - run: ./test.sh
