@@ -1,14 +1,15 @@
 - [x] Run test-cases from command line
 
 - [x] allow multi-line blocks
-- [ ] gdscript lines are getting clobbered somehow
+- [x] `var`
+- [ ] gdscript lines at the end are getting clobbered somehow
+- [ ] fix + to capture args first
+- [ ] `set`
 
 - [ ] Redesign, implement, test, `begin` and `return` forms
 
 - [ ] fix `let` form
-- [ ] `var`
 - [ ] `func`
-- [ ] `set`
 
 - [ ] Document forms and check their arg number
 - [ ] Add GENERATED, MODIFIED tags to blocks
