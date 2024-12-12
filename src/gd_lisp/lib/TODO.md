@@ -1,5 +1,8 @@
 - [x] Run test-cases from command line
 
+- [x] allow multi-line blocks
+- [ ] gdscript lines are getting clobbered somehow
+
 - [ ] Redesign, implement, test, `begin` and `return` forms
 
 - [ ] fix `let` form

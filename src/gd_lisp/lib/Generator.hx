@@ -15,8 +15,6 @@ class Generator {
 
     public function new() {
         state = GDLispState.defaultState();
-
-        var readTable = state.readTable;
     }
 
     function endGenerated(str:String) {
@@ -37,6 +35,7 @@ class Generator {
         var stream = Stream.fromFile(file);
         
         function findNextGDLisp() {
+            stream.linePrefix = '';
             code += switch(stream.takeUntil('#(', true)) {
                 case Some(gdscript):
                     gdscript;
@@ -44,6 +43,7 @@ class Generator {
                     "";
             };
             state.tabLevel = stream.currentTab();
+            stream.linePrefix = state.tabLevel + "#";
             stream.dropStringIf('#');
         }
 
@@ -65,6 +65,7 @@ class Generator {
         return code;
     }
 
+    static var argNum = 0;
     public static function convert(g: GDLispStateT, exp:ReaderExp, _inline = false):String {
         var globalTab = g.tabLevel;
         g.tabLevel = "";
@@ -84,15 +85,23 @@ class Generator {
                 switch(g.context()) {
                     case Return:
                         code = 'return ' + code;
+                    case Capture(varName):
+                        code = 'var $varName = ';
                     default:
                 }
 
                 // Basic expressions
-                code += switch (exp.def) {
+                switch (exp.def) {
                     case CallExp({def:Symbol(name)}, args):
-                        '$name(${[for(arg in args) g.convert(arg, true)].join(", ")})';
+                        var argStartIdx = argNum;
+                        for (arg in args) {
+                            g.pushContext(Capture('_arg${argNum++}'));
+                            code += g.convert(arg);
+                            g.tryPopContext();
+                        }
+                        code += '$name(${[for(idx in argStartIdx...argNum) '_arg${idx}'].join(", ")})';
                     case Symbol(name):
-                        name;
+                        code += name;
                     default:
                         throw 'expression ${Reader.toString(exp.def)} cannot be converted!';
                 }

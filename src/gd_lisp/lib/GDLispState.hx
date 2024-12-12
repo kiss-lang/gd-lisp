@@ -2,6 +2,7 @@ package gd_lisp.lib;
 
 import kiss.Reader;
 import kiss.ReaderExp;
+import kiss.Stream;
 import gd_lisp.lib.SyntaxForms;
 
 typedef GDLispStateT = {
@@ -15,12 +16,18 @@ typedef GDLispStateT = {
 enum Context {
     None;
     Return;
+    Capture(varName:String);
 }
 
 class GDLispState {
     public static function defaultState():GDLispStateT {
+
+        var readTable = Reader.builtins();
+
+        readTable['#'] = (stream:Stream, k:HasReadTables) -> null;
+
         return {
-            readTable: Reader.builtins(),
+            readTable: readTable,
             startOfLineReadTable: [],
             startOfFileReadTable: [],
             endOfFileReadTable: [],
@@ -33,6 +40,7 @@ class GDLispState {
                 "*" => Symbol("times"),
                 "return" => Symbol("_return"),
                 "assertEq" => Symbol("assertEquals"),
+                "var" => Symbol("_var")
             ],
             syntaxForms: SyntaxForms.builtins(),
             tabLevel: "",

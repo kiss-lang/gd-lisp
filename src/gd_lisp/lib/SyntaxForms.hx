@@ -59,6 +59,25 @@ class SyntaxForms {
             code;
         });
 
+        syntaxForm("_var", {
+            var code = '';
+            g.pushContext(Capture(Prelude.symbolNameValue(args[0])));
+            code += g.convert(args[1]);
+            g.tryPopContext();
+
+            code;
+        });
+
+        syntaxForm("set", {
+            var code = "";
+            g.pushContext(Capture("_set_value"));
+            code += g.convert(args[1]);
+            g.tryPopContext();
+            code += Prelude.symbolNameValue(args[0]) + ' = _set_value';
+
+            code;
+        });
+
         var letNum = 0;
         syntaxForm("let", {
             var b = wholeExp.expBuilder();
@@ -68,13 +87,8 @@ class SyntaxForms {
             g.tab();
             code += g.convert(b.begin(args.slice(1)));
             g.untab();
+            code = code.rtrim();
             code += '\n';
-
-            switch (g.context()) {
-                case Return:
-                    code += 'return ';
-                default:
-            }
 
             code += '_let${letNum++}(${[for (binding in bindings) g.convert(binding[1], true)].join(", ")})';
             code;
