@@ -56,8 +56,11 @@ class Generator {
             var terminators = ['###', '#('];
             var gdlispExisting = stream.takeUntilOneOf(terminators, true);
             switch (stream.takeOneOf(terminators)) {
-                // EOF or another gdlisp expression! Keep the existing stuff
-                case None | Some('#('):
+                // EOF! Keep the existing stuff
+                case None:
+                // Another gdlisp block!
+                case Some('#('):
+                    stream.putBackString('${stream.currentTab()}#(');
                 // End of generated block!
                 case Some('###'):
                     stream.dropUntil('\n');
@@ -66,7 +69,6 @@ class Generator {
                 default:
             };
 
-            stream.dropWhileOneOf(['\n', '#']);
             code += state.tabbed(endGenerated(str + '\n' + converted));
             code += '\n';
 
