@@ -16,6 +16,12 @@ using gd_lisp.lib.Generator;
 // Syntax forms convert Kiss reader expressions into GDScript
 typedef SyntaxFunction = (wholeExp:ReaderExp, args:Array<ReaderExp>, g: GDLispStateT) -> String;
 
+enum IfElseBranch {
+    If(cond:ReaderExp);
+    Elif(cond:ReaderExp);
+    Else;
+}
+
 class SyntaxForms {
     static macro function syntaxForm(name:String, body:Expr) {
         return macro {
@@ -212,15 +218,30 @@ class SyntaxForms {
             };
         }
 
-        syntaxForm("_if", {
+        // Each branch passed to this function is an array of [<condition> <then...>]
+        function ifElse(branches:Array<Array<ReaderExp>>, g:GDLispStateT) {
             var code = '';
-            var condition = args[0];
-            var then = args[1];
-            var _else = null;
-            if (args.length > 2) {
-                _else = args[2];
+            var first = branches.shift();
+            var last = branches.pop();
+
+            // Check if the last one is an else branch
+            if (last != null) {
+                switch (last[0]) {
+                    case {def:Symbol("else" | "true")}:
+                    default:
+                        branches.push(last);
+                        last = null;
+                }
             }
 
+            function handleCondition(condition:ReaderExp, keyword:String) {
+                var wrap = mustWrapTruthy(condition);
+                var cArgs = g.captureArgs([condition]);
+                if (cArgs.length > 0) {
+                    code += cArgs.rtrim() + '\n';
+                }
+                code += '${keyword} ${if (wrap) "truthy(" else ""}${g.popCapturedArgs()[0]}${if (wrap) ")" else "")}:\n';
+            }
 
             var innerContext = switch(g.context()) {
                 case Capture(varName):
@@ -230,31 +251,54 @@ class SyntaxForms {
                     g.context();
             };
 
-            code += g.captureArgs([condition]);
-            code += 'if ${if (mustWrapTruthy(args[0])) "truthy(" else ""}${g.popCapturedArgs()[0]}${if (mustWrapTruthy(args[0])) ")" else "")}:\n';
-            g.tab();
-            // Pass the context to the then and else branches
-            g.pushContext(innerContext);
-            code += g.convert(then);
-            g.untab();
-            if (_else != null) {
-                code += 'else:\n';
+            function handleIfElseBranch(which:IfElseBranch, body:Array<ReaderExp>) {
+                var b = body[0].expBuilder();
+                switch (which) {
+                    case If(condition):
+                        handleCondition(condition, 'if');
+                    case Elif(condition):
+                        handleCondition(condition, 'elif');
+                    case Else:
+                        code += 'else:\n';
+                }
                 g.tab();
+                // Pass the context to the branches
                 g.pushContext(innerContext);
-                code += g.convert(_else);
+                code += g.convert(b.begin(body));
                 g.untab();
             }
+            
+            handleIfElseBranch(If(first[0]), first.slice(1));
+            for (branch in branches) {
+                handleIfElseBranch(Elif(branch[0]), branch.slice(1));
+            }
+            if (last != null) {
+                handleIfElseBranch(Else, last.slice(1));
+            }
+
             g.tryPopContext();
-            code;
+
+            return code;
+        }
+
+        syntaxForm("_if", {
+            var condition = args[0];
+            var then = args[1];
+            var branches = [[condition, then]]; 
+            if (args.length > 2) {
+                var b = args[2].expBuilder();
+                branches.push([b.symbol('else'), args[2]]);
+            }
+
+            ifElse(branches, g);
         });
 
         syntaxForm("when", {
-            var b = wholeExp.expBuilder();
-            g.convert(b._if(args[0], b.begin(args.slice(1))));
+            ifElse([args], g);
         });
         syntaxForm("unless", {
             var b = wholeExp.expBuilder();
-            g.convert(b._if(b.not(args[0]), b.begin(args.slice(1))));
+            ifElse([[b.not(args[0])].concat(args.slice(1))], g);
         });
 
         return map;

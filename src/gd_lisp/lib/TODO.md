@@ -20,19 +20,20 @@
 - [x] `not
 
 - [x] `if`
-- [ ] `when`
-- [ ] `unless`
+- [x] `when`
+- [x] `unless`
+- [ ] `cond`
 
 - [ ] `while` will actually be tricky--if the args need expansion, the condition needs to be wrapped in a function so they expand every time!
 - [ ] `for` -- also support dictionaries
+- [ ] `ifLet`
+- [ ] += etc.
 
 - [ ] Document forms and check their arg number
 - [ ] Add GENERATED, MODIFIED tags to blocks
-- [ ] `ifLet`
-- [ ] `case`
 - [ ] Algebraic data types: data type that stores enum type and constructor as strings, arguments as array of variants
+- [ ] `case`
 - [ ] string multiplication
-- [ ] += etc.
 - [ ] $ reader macro
 
 - [ ] Make prelude compiled in/relative
