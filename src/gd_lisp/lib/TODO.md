@@ -6,9 +6,9 @@
 - [x] fix + to capture args first
 - [x] `set`
 
-- [ ] Redesign, implement, test, `begin` and `return` forms
+- [x] Redesign, implement, test, `begin` and `return` forms
 
-- [ ] fix `let` form
+- [x] fix `let` form
 - [ ] `func`
 
 - [ ] Document forms and check their arg number
