@@ -19,6 +19,7 @@ enum Context {
     None;
     Return;
     Capture(varName:String);
+    Set(varName:String);
 }
 
 class GDLispState {
@@ -48,7 +49,8 @@ class GDLispState {
                 "return" => Symbol("_return"),
                 "assertEq" => Symbol("assertEquals"),
                 "var" => Symbol("_var"),
-                "not" => Symbol("_not")
+                "not" => Symbol("_not"),
+                "if" => Symbol("_if")
             ],
             syntaxForms: SyntaxForms.builtins(),
             tabLevel: "",
@@ -91,6 +93,8 @@ class GDLispState {
                 'return ';
             case Capture(varName):
                 'var $varName = ';
+            case Set(varName):
+                '$varName = ';
             default:
                 '';
         };

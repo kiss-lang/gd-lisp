@@ -193,6 +193,61 @@ class SyntaxForms {
             logic("||", "or", args, false, g);
         });
 
+        var alwaysBool = [
+            'not',
+            '<',
+            '<=',
+            '=',
+            '>=',
+            '>'
+        ];
+        function mustWrapTruthy(exp:ReaderExp) {
+            return switch(exp.def) {
+                case CallExp({def: Symbol(name)}, _) if (alwaysBool.contains(name)):
+                    false;
+                case Symbol("true" | "false"):
+                    false;
+                default:
+                    true;
+            };
+        }
+
+        syntaxForm("_if", {
+            var code = '';
+            var condition = args[0];
+            var then = args[1];
+            var _else = null;
+            if (args.length > 2) {
+                _else = args[2];
+            }
+
+
+            var innerContext = switch(g.context()) {
+                case Capture(varName):
+                    code += 'var ${varName} = null\n';    
+                    Set(varName);
+                default:
+                    g.context();
+            };
+
+            code += g.captureArgs([condition]);
+            code += 'if ${if (mustWrapTruthy(args[0])) "truthy(" else ""}${g.popCapturedArgs()[0]}${if (mustWrapTruthy(args[0])) ")" else "")}:\n';
+            g.tab();
+            // Pass the context to the then and else branches
+            g.pushContext(innerContext);
+            code += g.convert(then);
+            g.untab();
+            if (_else != null) {
+                code += 'else:\n';
+                g.tab();
+                g.pushContext(innerContext);
+                code += g.convert(_else);
+                g.untab();
+            }
+            g.tryPopContext();
+            code;
+        });
+
         return map;
     }
 }

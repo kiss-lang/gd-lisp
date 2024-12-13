@@ -19,7 +19,12 @@
 - [x] `or`
 - [x] `not
 
-- [ ] `if`
+- [x] `if`
+- [ ] `when`
+- [ ] `unless`
+
+- [ ] `while` will actually be tricky--if the args need expansion, the condition needs to be wrapped in a function so they expand every time!
+- [ ] `for` -- also support dictionaries
 
 - [ ] Document forms and check their arg number
 - [ ] Add GENERATED, MODIFIED tags to blocks

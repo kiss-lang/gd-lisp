@@ -127,6 +127,43 @@ func _initialize():
 	assert(_not(false))
 	####################
 
+	var _then = true
+	var _else = false
+	#(assert (if true _then _else))
+	var _arg11 = null
+	if true:
+		_arg11 = _then
+	else:
+		_arg11 = _else
+	assert(_arg11)
+	###############################
+	#(assert !(if !true _then _else))
+	var _arg14 = null
+	if _not(true):
+		_arg14 = _then
+	else:
+		_arg14 = _else
+	var _arg13 = _not(_arg14)
+	assert(_arg13)
+	#################################
+
+	#(assert (if (and true 5) _then _else))
+	var _arg20 = null
+	var _and5 = func():
+		var _arg24 = true
+		if truthy(_arg24) != true:
+			return _arg24
+		var _arg25 = 5
+		if truthy(_arg25) != true:
+			return _arg25
+		return _arg25
+	var _arg23 = _and5.call()
+	if truthy(_arg23):
+		_arg20 = _then
+	else:
+		_arg20 = _else
+	assert(_arg20)
+	#######################################
 
 	quit()
 #(func global_func [a b c]
