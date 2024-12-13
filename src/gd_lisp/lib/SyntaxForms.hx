@@ -142,6 +142,30 @@ class SyntaxForms {
         syntaxForm("times", {
             arithmetic("*", args, g, Symbol('1'));
         });
+
+        function comparison(op:String, args:Array<ReaderExp>, g:GDLispStateT) {
+            var code = g.captureArgs(args);
+            if (code.length > 0) code += '\n';
+            var pairs = Prelude.pairs(g.popCapturedArgs());
+            return '${code}${g.popContextPrefix()}(' + [for (pair in pairs) pair[0] + op + pair[1]].join(' && ') + ')';
+        }
+
+        syntaxForm("lesser", {
+            comparison("<", args, g);
+        });
+        syntaxForm("lesserEquals", {
+            comparison("<=", args, g);
+        });
+        syntaxForm("equals", {
+            comparison("==", args, g);
+        });
+        syntaxForm("greaterEquals", {
+            comparison(">=", args, g);
+        });
+        syntaxForm("greater", {
+            comparison(">", args, g);
+        });
+
         return map;
     }
 }

@@ -40,6 +40,11 @@ class GDLispState {
                 "-" => Symbol("minus"),
                 "/" => Symbol("divide"),
                 "*" => Symbol("times"),
+                "<" => Symbol("lesser"),
+                "<=" => Symbol("lesserEquals"),
+                "=" => Symbol("equals"),
+                ">=" => Symbol("greaterEquals"),
+                ">" => Symbol("greater"),
                 "return" => Symbol("_return"),
                 "assertEq" => Symbol("assertEquals"),
                 "var" => Symbol("_var")

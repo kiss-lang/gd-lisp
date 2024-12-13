@@ -13,14 +13,15 @@
 - [x] `func`
 
 - [x] don't capture one-line args, save space
+- [x] Operator =
+- [x] Operators <, <=, >, >=
 
-- [ ] Document forms and check their arg number
-- [ ] Add GENERATED, MODIFIED tags to blocks
-- [ ] Operator =
-- [ ] Operators <, <=, >, >=
 - [ ] `if`
 - [ ] `and`
 - [ ] `or`
+
+- [ ] Document forms and check their arg number
+- [ ] Add GENERATED, MODIFIED tags to blocks
 - [ ] `ifLet`
 - [ ] `case`
 - [ ] Algebraic data types: data type that stores enum type and constructor as strings, arguments as array of variants
