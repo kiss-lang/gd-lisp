@@ -41,13 +41,11 @@ class SyntaxForms {
             var context = g.context();
             var code = '';
             var lastExp = args.pop();
-            g.pushContext(None);
             for (exp in args) {
+                g.pushContext(None);
                 code += g.convert(exp) + '\n';
             }
-            g.tryPopContext();
             code += g.convert(lastExp) + '\n';
-            g.tryPopContext();
             return code;
         });
 
@@ -82,15 +80,23 @@ class SyntaxForms {
         syntaxForm("let", {
             var b = wholeExp.expBuilder();
             var bindings = Prelude.groups(Prelude.bindingList(args[0], "let"), 2);
-
-            var code = 'func _let${letNum}(${[for (binding in bindings) Prelude.symbolNameValue(binding[0])].join(", ")}):\n';
+            var code = '';
+            code += 'var _let${letNum} = func(${[for (binding in bindings) Prelude.symbolNameValue(binding[0])].join(", ")}):\n';
             g.tab();
+
+            switch (g.context()) {
+                case Capture(_):
+                    g.pushContext(Return);
+                default:
+            }
+
             code += g.convert(b.begin(args.slice(1)));
             g.untab();
             code = code.rtrim();
             code += '\n';
 
-            code += '_let${letNum++}(${[for (binding in bindings) g.convert(binding[1], true)].join(", ")})';
+            code += g.convert(b.callSymbol('_let${letNum++}.call', [for (binding in bindings) binding[1]]));
+            g.tryPopContext();
             code;
         });
 

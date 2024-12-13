@@ -62,5 +62,38 @@ func _initialize():
 	assertEquals(_arg17, _arg18)
 	#############################
 
+	#(let [a 5 b 6]
+	#	(assertEq 5 a)
+	#	(assertEq 6 b)
+	#	(assertEq 11 (+ a b)))
+	var _let0 = func(a, b):
+		var _arg19 = 5
+		var _arg20 = a
+		assertEquals(_arg19, _arg20)
+		
+		var _arg21 = 6
+		var _arg22 = b
+		assertEquals(_arg21, _arg22)
+		
+		var _arg23 = 11
+		var _arg25 = a
+		var _arg26 = b
+		
+		var _arg24 = (_arg25 + _arg26)
+		assertEquals(_arg23, _arg24)
+	var _arg27 = 5
+	var _arg28 = 6
+	_let0.call(_arg27, _arg28)
+	################################
+	#(assertEq 5 (let [a 5 b 6] a))
+	var _arg29 = 5
+	var _let1 = func(a, b):
+		return a
+	var _arg31 = 5
+	var _arg32 = 6
+	var _arg30 = _let1.call(_arg31, _arg32)
+	assertEquals(_arg29, _arg30)
+	########################################
+
 
 	quit()

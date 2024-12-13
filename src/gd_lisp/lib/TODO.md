@@ -3,8 +3,8 @@
 - [x] allow multi-line blocks
 - [x] `var`
 - [x] gdscript lines at the end are getting clobbered somehow
-- [ ] fix + to capture args first
-- [ ] `set`
+- [x] fix + to capture args first
+- [x] `set`
 
 - [ ] Redesign, implement, test, `begin` and `return` forms
 
