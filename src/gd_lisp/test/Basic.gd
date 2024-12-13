@@ -165,6 +165,25 @@ func _initialize():
 	assert(_arg20)
 	#######################################
 
+	var val1 = 0
+	var val2 = 0
+	#(when true
+	#	(set val1 5)
+	#	(set val2 6))
+	if true:
+		val1 = 5
+		val2 = 6
+	################
+
+	#(unless false
+	#	(assertEq 5 val1)
+	#	(assertEq 6 val2))
+	if _not(false):
+		assertEquals(5, val1)
+		assertEquals(6, val2)
+	#######################
+
+
 	quit()
 #(func global_func [a b c]
 #	(return (+ a b c)))

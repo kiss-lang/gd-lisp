@@ -248,6 +248,15 @@ class SyntaxForms {
             code;
         });
 
+        syntaxForm("when", {
+            var b = wholeExp.expBuilder();
+            g.convert(b._if(args[0], b.begin(args.slice(1))));
+        });
+        syntaxForm("unless", {
+            var b = wholeExp.expBuilder();
+            g.convert(b._if(b.not(args[0]), b.begin(args.slice(1))));
+        });
+
         return map;
     }
 }
