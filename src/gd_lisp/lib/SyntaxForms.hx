@@ -36,7 +36,7 @@ class SyntaxForms {
         syntaxForm("prelude", File.getContent("src/gd_lisp/lib/Prelude.gd"));
 
         // Convert an array of expressions. Only pass the current context to the last expression,
-        // and pop the current context
+        // which will pop it
         syntaxForm("begin", {
             var context = g.context();
             var code = '';
@@ -98,6 +98,23 @@ class SyntaxForms {
             code += g.convert(b.callSymbol('_let${letNum++}.call', [for (binding in bindings) binding[1]]));
             g.tryPopContext();
             code;
+        });
+
+        syntaxForm("func", {
+            var b = wholeExp.expBuilder();
+            var argListIdx = 0;
+            var name = switch(args[0].def) {
+                case Symbol(name):
+                    ++argListIdx;
+                    '${name} ';
+                default: '';
+            };
+            var funcArgs = Prelude.argList(args[argListIdx], 'func');
+            var bodyExps = args.slice(argListIdx+1);
+            var code = g.popContextPrefix() + 'func ${name}(${[for (arg in funcArgs) Prelude.symbolNameValue(arg)].join(", ")}):\n';
+            g.tab();
+            code += g.convert(b.begin(bodyExps));
+            return code;
         });
 
         function arithmetic(op:String, args:Array<ReaderExp>, g:GDLispStateT, defaultFirst:ReaderExpDef) {

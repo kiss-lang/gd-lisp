@@ -9,7 +9,7 @@
 - [x] Redesign, implement, test, `begin` and `return` forms
 
 - [x] fix `let` form
-- [ ] `func`
+- [x] `func`
 
 - [ ] Document forms and check their arg number
 - [ ] Add GENERATED, MODIFIED tags to blocks
@@ -19,7 +19,7 @@
 - [ ] Pass context into syntaxforms, so (return (if ...)) can return the result of both branches
 - [ ] `ifLet`
 - [ ] `case`
-- [ ] Algebraic data types
+- [ ] Algebraic data types: data type that stores enum type and constructor as strings, arguments as array of variants
 - [ ] string multiplication
 - [ ] += etc.
 - [ ] $ reader macro

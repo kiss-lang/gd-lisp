@@ -94,6 +94,38 @@ func _initialize():
 	var _arg30 = _let1.call(_arg31, _arg32)
 	assertEquals(_arg29, _arg30)
 	########################################
+	#(var lambd (func [a] (return (+ a 5))))
+	var lambd = func (a):
+		var _arg33 = a
+		var _arg34 = 5
+		
+		return (_arg33 + _arg34)
+	########################################
 
+	#(assertEq 10 (lambd.call 5))
+	var _arg35 = 10
+	var _arg37 = 5
+	var _arg36 = lambd.call(_arg37)
+	assertEquals(_arg35, _arg36)
+	################################
+
+	#(assertEq 6 (global_func 1 2 3))
+	var _arg38 = 6
+	var _arg40 = 1
+	var _arg41 = 2
+	var _arg42 = 3
+	var _arg39 = global_func(_arg40, _arg41, _arg42)
+	assertEquals(_arg38, _arg39)
+	#################################################
 
 	quit()
+#(func global_func [a b c]
+#	(return (+ a b c)))
+func global_func (a, b, c):
+	var _arg43 = a
+	var _arg44 = b
+	var _arg45 = c
+	
+	return (_arg43 + _arg44 + _arg45)
+##################################
+
