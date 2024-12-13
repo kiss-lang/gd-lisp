@@ -43,9 +43,9 @@ class SyntaxForms {
             var lastExp = args.pop();
             for (exp in args) {
                 g.pushContext(None);
-                code += g.convert(exp) + '\n';
+                code += g.convert(exp).rtrim() + '\n';
             }
-            code += g.convert(lastExp) + '\n';
+            code += g.convert(lastExp).rtrim() + '\n';
             return code;
         });
 
@@ -68,11 +68,9 @@ class SyntaxForms {
         var setNum = 0;
         syntaxForm("set", {
             var code = "";
-            g.pushContext(Capture('_set_val${setNum}'));
-            code += g.convert(args[1]);
-            g.tryPopContext();
-            code += Prelude.symbolNameValue(args[0]) + ' = _set_val${setNum++}';
-
+            code += g.captureArgs([args[1]]);
+            if (code.length > 0) code += '\n';
+            code += '${Prelude.symbolNameValue(args[0])} = ${g.popCapturedArgs()[0]}';
             code;
         });
 
@@ -125,7 +123,8 @@ class SyntaxForms {
                 throw 'arithmetic with no arguments';
             }
             var code = g.captureArgs(args);
-            return '${code}\n${g.popContextPrefix()}(' + g.popCapturedArgs().join(' ${op} ') + ')';
+            if (code.length > 0) code += '\n';
+            return '${code}${g.popContextPrefix()}(' + g.popCapturedArgs().join(' ${op} ') + ')';
         }
 
         syntaxForm("plus", {

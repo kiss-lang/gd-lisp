@@ -92,9 +92,18 @@ class Generator {
 
         var funcArgs = [];
         for (arg in args) {
-            funcArgs.push('_arg${argNum}');
-            g.pushContext(Capture('_arg${argNum++}'));
-            code += g.convert(arg);
+            // Try converting without a context. If it comes back as a one-liner, pass that directly to the args
+            g.pushContext(None);
+            var withoutContext = g.convert(arg, true);
+            if (withoutContext.rtrim().split('\n').length == 1) {
+                funcArgs.push(withoutContext);
+            }
+            // If the expression can't be passed inline, capture it
+            else {
+                funcArgs.push('_arg${argNum}');
+                g.pushContext(Capture('_arg${argNum++}'));
+                code += g.convert(arg);
+            }
         }
         g.capturedArgs.push(funcArgs);
         return code;

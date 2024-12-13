@@ -13,119 +13,63 @@ func assertEquals(expected, actual):
 	
 func _initialize():
 	#(assertEq 6 6)
-	var _arg0 = 6
-	var _arg1 = 6
-	assertEquals(_arg0, _arg1)
-	###########################
+	assertEquals(6, 6)
+	###################
 	#(assertEq
 	#	5
 	#	5)
-	var _arg2 = 5
-	var _arg3 = 5
-	assertEquals(_arg2, _arg3)
-	###########################
+	assertEquals(5, 5)
+	###################
 	#(var test_var 5)
 	var test_var = 5
 	#################
 	#(assertEq 5 test_var)
-	var _arg4 = 5
-	var _arg5 = test_var
-	assertEquals(_arg4, _arg5)
-	###########################
+	assertEquals(5, test_var)
+	##########################
 	#(set test_var (+ 5 6 7))
-	var _arg6 = 5
-	var _arg7 = 6
-	var _arg8 = 7
-	
-	var _set_val0 = (_arg6 + _arg7 + _arg8)
-	test_var = _set_val0
-	########################################
+	test_var = (5 + 6 + 7)
+	#########################
 	#(set test_var (+ (+ 5 6 7) (- 2 3 4)))
-	var _arg10 = 5
-	var _arg11 = 6
-	var _arg12 = 7
-	
-	var _arg9 = (_arg10 + _arg11 + _arg12)
-	var _arg14 = 2
-	var _arg15 = 3
-	var _arg16 = 4
-	
-	var _arg13 = (_arg14 - _arg15 - _arg16)
-	
-	var _set_val1 = (_arg9 + _arg13)
-	test_var = _set_val1
-	########################################
+	test_var = ((5 + 6 + 7) + (2 - 3 - 4))
+	#######################################
 
 	#(assertEq 13 test_var)
-	var _arg17 = 13
-	var _arg18 = test_var
-	assertEquals(_arg17, _arg18)
-	#############################
+	assertEquals(13, test_var)
+	###########################
 
 	#(let [a 5 b 6]
 	#	(assertEq 5 a)
 	#	(assertEq 6 b)
 	#	(assertEq 11 (+ a b)))
 	var _let0 = func(a, b):
-		var _arg19 = 5
-		var _arg20 = a
-		assertEquals(_arg19, _arg20)
-		
-		var _arg21 = 6
-		var _arg22 = b
-		assertEquals(_arg21, _arg22)
-		
-		var _arg23 = 11
-		var _arg25 = a
-		var _arg26 = b
-		
-		var _arg24 = (_arg25 + _arg26)
-		assertEquals(_arg23, _arg24)
-	var _arg27 = 5
-	var _arg28 = 6
-	_let0.call(_arg27, _arg28)
-	################################
+		assertEquals(5, a)
+		assertEquals(6, b)
+		assertEquals(11, (a + b))
+	_let0.call(5, 6)
+	###########################
 	#(assertEq 5 (let [a 5 b 6] a))
-	var _arg29 = 5
-	var _let1 = func(a, b):
+	var _let2 = func(a, b):
 		return a
-	var _arg31 = 5
-	var _arg32 = 6
-	var _arg30 = _let1.call(_arg31, _arg32)
-	assertEquals(_arg29, _arg30)
-	########################################
+	var _arg0 = _let2.call(5, 6)
+	assertEquals(5, _arg0)
+	###############################
 	#(var lambd (func [a] (return (+ a 5))))
 	var lambd = func (a):
-		var _arg33 = a
-		var _arg34 = 5
-		
-		return (_arg33 + _arg34)
+		return (a + 5)
 	########################################
 
 	#(assertEq 10 (lambd.call 5))
-	var _arg35 = 10
-	var _arg37 = 5
-	var _arg36 = lambd.call(_arg37)
-	assertEquals(_arg35, _arg36)
+	assertEquals(10, lambd.call(5))
 	################################
 
 	#(assertEq 6 (global_func 1 2 3))
-	var _arg38 = 6
-	var _arg40 = 1
-	var _arg41 = 2
-	var _arg42 = 3
-	var _arg39 = global_func(_arg40, _arg41, _arg42)
-	assertEquals(_arg38, _arg39)
-	#################################################
+	assertEquals(6, global_func(1, 2, 3))
+	######################################
 
 	quit()
 #(func global_func [a b c]
 #	(return (+ a b c)))
 func global_func (a, b, c):
-	var _arg43 = a
-	var _arg44 = b
-	var _arg45 = c
-	
-	return (_arg43 + _arg44 + _arg45)
-##################################
+	return (a + b + c)
+###########################
 

@@ -7,16 +7,20 @@
 - [x] `set`
 
 - [x] Redesign, implement, test, `begin` and `return` forms
+- [x] Pass context into syntaxforms, so (return (if ...)) can return the result of both branches
 
 - [x] fix `let` form
 - [x] `func`
+
+- [x] don't capture one-line args, save space
 
 - [ ] Document forms and check their arg number
 - [ ] Add GENERATED, MODIFIED tags to blocks
 - [ ] Operator =
 - [ ] Operators <, <=, >, >=
 - [ ] `if`
-- [ ] Pass context into syntaxforms, so (return (if ...)) can return the result of both branches
+- [ ] `and`
+- [ ] `or`
 - [ ] `ifLet`
 - [ ] `case`
 - [ ] Algebraic data types: data type that stores enum type and constructor as strings, arguments as array of variants
