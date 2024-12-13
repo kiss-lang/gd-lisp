@@ -40,4 +40,27 @@ func _initialize():
 	var _set_val0 = (_arg6 + _arg7 + _arg8)
 	test_var = _set_val0
 	########################################
+	#(set test_var (+ (+ 5 6 7) (- 2 3 4)))
+	var _arg10 = 5
+	var _arg11 = 6
+	var _arg12 = 7
+	
+	var _arg9 = (_arg10 + _arg11 + _arg12)
+	var _arg14 = 2
+	var _arg15 = 3
+	var _arg16 = 4
+	
+	var _arg13 = (_arg14 - _arg15 - _arg16)
+	
+	var _set_val1 = (_arg9 + _arg13)
+	test_var = _set_val1
+	########################################
+
+	#(assertEq 13 test_var)
+	var _arg17 = 13
+	var _arg18 = test_var
+	assertEquals(_arg17, _arg18)
+	#############################
+
+
 	quit()

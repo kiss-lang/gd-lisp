@@ -101,9 +101,8 @@ class SyntaxForms {
             } else if (args.length == 0) {
                 throw 'arithmetic with no arguments';
             }
-            var argStartIdx = Generator.argNum;
             var code = g.captureArgs(args);
-            return '${code}\n${g.popContextPrefix()}(' + [for (idx in argStartIdx... Generator.argNum) '_arg${idx}'].join(' ${op} ') + ')';
+            return '${code}\n${g.popContextPrefix()}(' + g.popCapturedArgs().join(' ${op} ') + ')';
         }
 
         syntaxForm("plus", {

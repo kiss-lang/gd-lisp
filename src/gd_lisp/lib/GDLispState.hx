@@ -11,7 +11,8 @@ typedef GDLispStateT = {
     tabLevel:String,
     callAliases:Map<String,ReaderExpDef>,
     syntaxForms:Map<String,SyntaxFunction>,
-    contextStack:Array<Context>
+    contextStack:Array<Context>,
+    capturedArgs:Array<Array<String>>
 };
 
 enum Context {
@@ -45,7 +46,8 @@ class GDLispState {
             ],
             syntaxForms: SyntaxForms.builtins(),
             tabLevel: "",
-            contextStack: [ None ]
+            contextStack: [ None ],
+            capturedArgs: []
         };
     }
 
@@ -86,5 +88,9 @@ class GDLispState {
             default:
                 '';
         };
+    }
+
+    public static function popCapturedArgs(g:GDLispStateT) {
+        return g.capturedArgs.pop();
     }
 }

@@ -88,10 +88,13 @@ class Generator {
     public static function captureArgs(g:GDLispStateT, args:Array<ReaderExp>) {
         var code = '';
 
+        var funcArgs = [];
         for (arg in args) {
+            funcArgs.push('_arg${argNum}');
             g.pushContext(Capture('_arg${argNum++}'));
             code += g.convert(arg);
         }
+        g.capturedArgs.push(funcArgs);
         return code;
     }
 
@@ -114,9 +117,8 @@ class Generator {
                 // Basic expressions
                 switch (exp.def) {
                     case CallExp({def:Symbol(name)}, args):
-                        var argStartIdx = argNum;
                         code += g.captureArgs(args);
-                        code += g.popContextPrefix() + '$name(${[for(idx in argStartIdx...argNum) '_arg${idx}'].join(", ")})';
+                        code += g.popContextPrefix() + '$name(${g.popCapturedArgs().join(", ")})';
                     case Symbol(name):
                         code += g.popContextPrefix() + name;
                     default:
