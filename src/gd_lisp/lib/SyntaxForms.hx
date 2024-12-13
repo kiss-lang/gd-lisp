@@ -166,6 +166,33 @@ class SyntaxForms {
             comparison(">", args, g);
         });
 
+        var andNum = 0;
+        var orNum = 0;
+        function logic(op:String, keyword:String, args:Array<ReaderExp>, defaultValue:Bool, g:GDLispStateT) {
+            var captureVar = '_${keyword}';
+            if (keyword == 'and') captureVar += andNum++;
+            else captureVar += orNum++;
+            var code = 'var ${captureVar} = func():\n';
+            g.tab();
+            var evaluated = '';
+            for (arg in args) {
+                code += g.captureArgs([arg], true);
+                evaluated = g.popCapturedArgs()[0];
+                code += '${g.tabLevel}if truthy(${evaluated}) != ${defaultValue}:\n${g.tabLevel}\treturn ${evaluated}\n';
+            }
+            code += '${g.tabLevel}return ${evaluated}\n';
+            g.untab();
+            code += g.popContextPrefix() + '${captureVar}.call()';
+            return code;
+        }
+
+        syntaxForm("and", {
+            logic("&&", "and", args, true, g);
+        });
+        syntaxForm("or", {
+            logic("||", "or", args, false, g);
+        });
+
         return map;
     }
 }

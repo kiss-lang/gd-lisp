@@ -6,6 +6,9 @@ func _gdprint(v):
 	print(v)
 	return v
 
+func truthy(v):
+	return (type_string(typeof(v)) == 'bool' && v != false) && v != null
+
 # (assertEq <expected> <actual>)
 func assertEquals(expected, actual):
 	assert(expected == actual, 'Expected {} but it was {}'.format([expected, actual], "{}"))
@@ -85,6 +88,31 @@ func _initialize():
 	assert((3>2 && 2>1))
 	#####################
 
+	#(assertEq 5 (or null 5))
+	var _or1 = func():
+		var _arg4 = null
+		if truthy(_arg4) != false:
+			return _arg4
+		var _arg5 = 5
+		if truthy(_arg5) != false:
+			return _arg5
+		return _arg5
+	var _arg3 = _or1.call()
+	assertEquals(5, _arg3)
+	############################
+
+	#(assertEq false (and false 5))
+	var _and1 = func():
+		var _arg9 = false
+		if truthy(_arg9) != true:
+			return _arg9
+		var _arg10 = 5
+		if truthy(_arg10) != true:
+			return _arg10
+		return _arg10
+	var _arg8 = _and1.call()
+	assertEquals(false, _arg8)
+	###############################
 
 
 	quit()

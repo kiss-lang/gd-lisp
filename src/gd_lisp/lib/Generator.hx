@@ -87,7 +87,7 @@ class Generator {
     }
 
     public static var argNum(default, null) = 0;
-    public static function captureArgs(g:GDLispStateT, args:Array<ReaderExp>) {
+    public static function captureArgs(g:GDLispStateT, args:Array<ReaderExp>, alwaysCapture = false) {
         var code = '';
 
         var funcArgs = [];
@@ -95,7 +95,7 @@ class Generator {
             // Try converting without a context. If it comes back as a one-liner, pass that directly to the args
             g.pushContext(None);
             var withoutContext = g.convert(arg, true);
-            if (withoutContext.rtrim().split('\n').length == 1) {
+            if (!alwaysCapture && withoutContext.rtrim().split('\n').length == 1) {
                 funcArgs.push(withoutContext);
             }
             // If the expression can't be passed inline, capture it
