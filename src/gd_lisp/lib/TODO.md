@@ -15,10 +15,11 @@
 - [x] don't capture one-line args, save space
 - [x] Operator =
 - [x] Operators <, <=, >, >=
+- [x] `and`
+- [x] `or`
+- [x] `not
 
 - [ ] `if`
-- [ ] `and`
-- [ ] `or`
 
 - [ ] Document forms and check their arg number
 - [ ] Add GENERATED, MODIFIED tags to blocks

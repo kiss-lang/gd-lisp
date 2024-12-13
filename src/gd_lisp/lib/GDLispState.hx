@@ -47,7 +47,8 @@ class GDLispState {
                 ">" => Symbol("greater"),
                 "return" => Symbol("_return"),
                 "assertEq" => Symbol("assertEquals"),
-                "var" => Symbol("_var")
+                "var" => Symbol("_var"),
+                "not" => Symbol("_not")
             ],
             syntaxForms: SyntaxForms.builtins(),
             tabLevel: "",
