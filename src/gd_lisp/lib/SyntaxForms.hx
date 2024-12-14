@@ -277,7 +277,6 @@ class SyntaxForms {
             }
 
             g.tryPopContext();
-
             return code;
         }
 
@@ -299,6 +298,18 @@ class SyntaxForms {
         syntaxForm("unless", {
             var b = wholeExp.expBuilder();
             ifElse([[b.not(args[0])].concat(args.slice(1))], g);
+        });
+
+        syntaxForm("cond", {
+            var branches = [for (arg in args) {
+                switch(arg.def) {
+                    case CallExp(condition, body):
+                        [condition].concat(body);
+                    default:
+                        throw 'bad cond args';
+                }
+            }];
+            ifElse(branches, g);
         });
 
         return map;

@@ -183,6 +183,19 @@ func _initialize():
 		assertEquals(6, val2)
 	#######################
 
+	#(assertEq 5
+	#	(cond
+	#		(false "error!")
+	#		(else 5)))
+	var _arg26 = null
+	if false:
+		_arg26 = "error!"
+	else:
+		_arg26 = 5
+	assertEquals(5, _arg26)
+	########################
+
+
 
 	quit()
 #(func global_func [a b c]
