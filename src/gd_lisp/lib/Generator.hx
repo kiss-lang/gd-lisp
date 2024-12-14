@@ -132,6 +132,8 @@ class Generator {
                         code += g.popContextPrefix() + '$name(${g.popCapturedArgs().join(", ")})';
                     case Symbol(name):
                         code += g.popContextPrefix() + name;
+                    case StrExp(str):
+                        code += g.popContextPrefix() + '"' + str + '"';
                     default:
                         throw 'expression ${Reader.toString(exp.def)} cannot be converted!';
                 }
