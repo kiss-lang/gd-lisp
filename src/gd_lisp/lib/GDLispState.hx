@@ -38,9 +38,13 @@ class GDLispState {
             callAliases: [
                 "print" => Symbol("_gdprint"),
                 "+" => Symbol("plus"),
+                "+=" => Symbol("plusEquals"),
                 "-" => Symbol("minus"),
+                "-=" => Symbol("minusEquals"),
                 "/" => Symbol("divide"),
+                "/=" => Symbol("divideEquals"),
                 "*" => Symbol("times"),
+                "*=" => Symbol("timesEquals"),
                 "<" => Symbol("lesser"),
                 "<=" => Symbol("lesserEquals"),
                 "=" => Symbol("equals"),

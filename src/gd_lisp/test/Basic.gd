@@ -213,6 +213,46 @@ func _initialize():
 	assertEquals(15, nth(arr, 3))
 	##############################
 
+	#(var start 0)
+	var start = 0
+	##############
+
+	#(+= start 5)
+	start += (0 + 5)
+	#################
+
+	#(assertEq 5 start)
+	assertEquals(5, start)
+	#######################
+
+	#(-= start 2 3)
+	start -= (2 + 3)
+	#################
+
+	#(assertEq 0 start)
+	assertEquals(0, start)
+	#######################
+
+	#(set start 1)
+	start = 1
+	##############
+
+	#(*= start 1000 2)
+	start *= (1000 * 2)
+	####################
+
+	#(assertEq 2000 start)
+	assertEquals(2000, start)
+	##########################
+
+	#(/= start 5 100)
+	start /= (5 * 100)
+	###################
+
+	#(assertEq 4 start)
+	assertEquals(4, start)
+	#######################
+
 
 	quit()
 #(func global_func [a b c]

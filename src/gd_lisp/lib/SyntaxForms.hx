@@ -133,20 +133,43 @@ class SyntaxForms {
             return '${code}${g.popContextPrefix()}(' + g.popCapturedArgs().join(' ${op} ') + ')';
         }
 
+        var rhsNum = 0;
+        function arithmeticEquals(op:String, rhsOp:String, args:Array<ReaderExp>, g:GDLispStateT) {
+            if (args.length < 2) {
+                throw 'not enough operands for ${op}=';
+            }
+            var b = args[1].expBuilder();
+            var code = g.captureArgs([b.callSymbol(rhsOp, args.slice(1))]);
+            if (code.length > 0) code += '\n';
+            return '${code}${g.popContextPrefix()}${g.convert(args[0]).rtrim()} ${op}= ${g.popCapturedArgs()[0]}';
+        }
+
         syntaxForm("plus", {
             arithmetic("+", args, g, Symbol('0'));
+        });
+        syntaxForm("plusEquals", {
+            arithmeticEquals("+", "+", args, g);
         });
 
         syntaxForm("minus", {
             arithmetic("-", args, g, Symbol('0'));
         });
+        syntaxForm("minusEquals", {
+            arithmeticEquals("-", "+", args, g);
+        });
         
         syntaxForm("divide", {
             arithmetic("/", args, g, Symbol('1'));
         });
+        syntaxForm("divideEquals", {
+            arithmeticEquals("/", "*", args, g);
+        });
         
         syntaxForm("times", {
             arithmetic("*", args, g, Symbol('1'));
+        });
+        syntaxForm("timesEquals", {
+            arithmeticEquals("*", "*", args, g);
         });
 
         function comparison(op:String, args:Array<ReaderExp>, g:GDLispStateT) {

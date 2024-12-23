@@ -27,6 +27,7 @@
 - [x] array expressions
 
 - [x] `nth`
+- [x] += etc.
 - [ ] dict expressions
 
 - [ ] arrow lambda (just alias lambda to func?)
@@ -34,7 +35,6 @@
 - [ ] `while` will actually be tricky--if the args need expansion, the condition needs to be wrapped in a function so they expand every time!
 - [ ] `for` -- also support dictionaries
 - [ ] `ifLet`
-- [ ] += etc.
 
 - [ ] Document forms and check their arg number
 - [ ] Add GENERATED, MODIFIED tags to blocks
