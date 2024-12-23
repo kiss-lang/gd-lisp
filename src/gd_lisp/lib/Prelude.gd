@@ -14,3 +14,8 @@ func _not(v):
 # (assertEq <expected> <actual>)
 func assertEquals(expected, actual):
 	assert(typeof(expected) == typeof(actual) && expected == actual, 'Expected {} but it was {}'.format([str(expected), str(actual)], "{}"))
+
+func nth(arr, n):
+	if n < 0:
+		n = arr.size() + n
+	return arr[n]

@@ -17,6 +17,11 @@ func _not(v):
 # (assertEq <expected> <actual>)
 func assertEquals(expected, actual):
 	assert(typeof(expected) == typeof(actual) && expected == actual, 'Expected {} but it was {}'.format([str(expected), str(actual)], "{}"))
+
+func nth(arr, n):
+	if n < 0:
+		n = arr.size() + n
+	return arr[n]
 #########################################################################################################################################
 	
 func _initialize():
@@ -200,6 +205,13 @@ func _initialize():
 
 	assertEquals([1, 2, 3, 15], arr)
 
+	#(assertEq 15 (nth arr -1))
+	assertEquals(15, nth(arr, -1))
+	###############################
+
+	#(assertEq 15 (nth arr 3))
+	assertEquals(15, nth(arr, 3))
+	##############################
 
 
 	quit()

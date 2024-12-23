@@ -26,7 +26,11 @@
 
 - [x] array expressions
 
-- [ ] `nth`
+- [x] `nth`
+- [ ] dict expressions
+
+- [ ] arrow lambda (just alias lambda to func?)
+
 - [ ] `while` will actually be tricky--if the args need expansion, the condition needs to be wrapped in a function so they expand every time!
 - [ ] `for` -- also support dictionaries
 - [ ] `ifLet`
