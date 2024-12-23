@@ -16,8 +16,8 @@ func _not(v):
 
 # (assertEq <expected> <actual>)
 func assertEquals(expected, actual):
-	assert(typeof(expected) == typeof(actual) && expected == actual, 'Expected {} but it was {}'.format([expected, actual], "{}"))
-###############################################################################################################################
+	assert(typeof(expected) == typeof(actual) && expected == actual, 'Expected {} but it was {}'.format([str(expected), str(actual)], "{}"))
+#########################################################################################################################################
 	
 func _initialize():
 	#(assertEq 6 6)
