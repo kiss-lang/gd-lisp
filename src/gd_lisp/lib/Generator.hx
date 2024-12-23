@@ -130,6 +130,9 @@ class Generator {
                     case CallExp({def:Symbol(name)}, args):
                         code += g.captureArgs(args);
                         code += g.popContextPrefix() + '$name(${g.popCapturedArgs().join(", ")})';
+                    case ListExp(elements):
+                        code += g.captureArgs(elements);
+                        code += g.popContextPrefix() + '[${g.popCapturedArgs().join(", ")}]';
                     case Symbol(name):
                         code += g.popContextPrefix() + name;
                     case StrExp(str):

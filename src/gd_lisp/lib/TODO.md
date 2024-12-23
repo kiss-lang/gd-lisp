@@ -22,8 +22,11 @@
 - [x] `if`
 - [x] `when`
 - [x] `unless`
-- [ ] `cond`
+- [x] `cond`
 
+- [x] array expressions
+
+- [ ] `nth`
 - [ ] `while` will actually be tricky--if the args need expansion, the condition needs to be wrapped in a function so they expand every time!
 - [ ] `for` -- also support dictionaries
 - [ ] `ifLet`
