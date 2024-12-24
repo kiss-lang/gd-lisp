@@ -29,7 +29,11 @@
 - [x] `nth`
 - [x] += etc.
 - [x] dict expressions
-- [ ] `for` -- also support dictionaries
+- [x] `for` -- also support dictionaries
+
+- [x] `dictGet`
+- [x] `dictSet`
+- [x] `setNth`
 
 - [ ] arrow lambda (just alias lambda to func?)
 

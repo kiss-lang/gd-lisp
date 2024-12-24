@@ -138,8 +138,11 @@ class Generator {
                     case BraceExp([]):
                         code += g.inContext('{}');
                     case BraceExp(elements):
-                        // Dictionary with elements
                         switch(elements[0].def) {
+                            // Dictionary comprehension
+                            case Symbol("for"):
+                                code += SyntaxForms._for(exp, elements.slice(1), g, false);
+                            // Dictionary with elements
                             case KeyValueExp(_, _):
                                 var keyExps = [];
                                 var valueExps = [];
@@ -167,6 +170,9 @@ class Generator {
                         code += g.inContext(name);
                     case StrExp(str):
                         code += g.inContext('"' + str + '"');
+                    case KeyValueExp(key, value):
+                        code += g.captureArgs([key, value]);
+                        code += g.inContext('KVPair_.make(${g.popCapturedArgs().join(", ")})');
                     default:
                         throw 'expression ${Reader.toString(exp.def)} cannot be converted!';
                 }

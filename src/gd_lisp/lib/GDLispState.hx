@@ -21,6 +21,7 @@ enum Context {
     Capture(varName:String);
     Set(varName:String);
     Append(arrName:String);
+    DictSet(dictName:String);
 }
 
 class GDLispState {
@@ -105,6 +106,8 @@ class GDLispState {
                 '$varName = ';
             case Append(arrName):
                 '${arrName}.append(';
+            case DictSet(dictName):
+                'dictSet(${dictName}, ';
             default:
                 '';
         };
@@ -112,7 +115,7 @@ class GDLispState {
 
     public static function contextSuffix(g:GDLispStateT) {
         return switch (g.context()) {
-            case Append(arrName):
+            case Append(_) | DictSet(_):
                 ')';
             default:
                 '';
