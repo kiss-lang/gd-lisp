@@ -42,7 +42,6 @@
 - [x] `ifLet`
 - [x] `whileLet`
 
-- [ ] string multiplication
 - [ ] $ reader macro
 - [ ] breakpoint reader macro create `breakpoint` before expression
 
