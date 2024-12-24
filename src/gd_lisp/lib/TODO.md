@@ -34,11 +34,11 @@
 - [x] `dictGet`
 - [x] `dictSet`
 - [x] `setNth`
-
-- [ ] arrow lambda (just alias lambda to func?)
+- [x] arrow lambda
 
 - [ ] `while` will actually be tricky--if the args need expansion, the condition needs to be wrapped in a function so they expand every time!
 - [ ] `ifLet`
+
 
 - [ ] Document forms and check their arg number
 - [ ] Proper error messages with line numbers

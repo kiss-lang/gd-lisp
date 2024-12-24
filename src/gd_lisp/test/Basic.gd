@@ -342,6 +342,14 @@ func _initialize():
 	assertEquals(_arg28, dict_comp)
 	###############################################
 
+	#(var lambd2 ->a (+ a 5))
+	var lambd2 = func (a):
+		return (a + 5)
+	#########################
+
+	#(assertEq 6 (lambd2.call 1))
+	assertEquals(6, lambd2.call(1))
+	################################
 
 
 	quit()

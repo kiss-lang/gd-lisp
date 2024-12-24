@@ -104,23 +104,8 @@ class SyntaxForms {
             code;
         });
 
-        syntaxForm("func", {
-            var b = wholeExp.expBuilder();
-            var argListIdx = 0;
-            var name = switch(args[0].def) {
-                case Symbol(name):
-                    ++argListIdx;
-                    '${name} ';
-                default: '';
-            };
-            var funcArgs = Prelude.argList(args[argListIdx], 'func');
-            var bodyExps = args.slice(argListIdx+1);
-            var suffix = g.contextSuffix();
-            var code = g.popContextPrefix() + 'func ${name}(${[for (arg in funcArgs) Prelude.symbolNameValue(arg)].join(", ")}):\n';
-            g.tab();
-            code += g.convert(b.begin(bodyExps)) + suffix;
-            return code;
-        });
+        map["func"] = func.bind(_, _, _, false);
+        map["lambda"] = func.bind(_, _, _, true);
 
         function arithmetic(op:String, args:Array<ReaderExp>, g:GDLispStateT, defaultFirst:ReaderExpDef) {
             if (args.length == 1) {
@@ -385,6 +370,28 @@ class SyntaxForms {
         if (collecting != null) {
             code += g.inContext(collecting);
         }
+        return code;
+    }
+
+    static function func(wholeExp:ReaderExp, args:Array<ReaderExp>, g:GDLispStateT, returnLast:Bool) {
+        var b = wholeExp.expBuilder();
+        var argListIdx = 0;
+        var name = switch(args[0].def) {
+            case Symbol(name):
+                ++argListIdx;
+                '${name} ';
+            default: '';
+        };
+        var funcArgs = Prelude.argList(args[argListIdx], 'func');
+        var bodyExps = args.slice(argListIdx+1);
+        var suffix = g.contextSuffix();
+        var code = g.popContextPrefix() + 'func ${name}(${[for (arg in funcArgs) Prelude.symbolNameValue(arg)].join(", ")}):\n';
+        g.tab();
+        var body = b.begin(bodyExps);
+        if (returnLast) {
+            body = b.callSymbol("return", [body]);
+        }
+        code += g.convert(body) + suffix;
         return code;
     }
 }
