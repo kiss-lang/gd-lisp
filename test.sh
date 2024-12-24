@@ -7,6 +7,7 @@ if [ -z "$app" ]; then
     app=$(which Godot)
 fi
 
+cases="$@"
 if [ -z "$cases" ]; then
     for script in "src/gd_lisp/test/*.gd"; do
         haxe test.hxml --run gd_lisp.lib.Main $script
