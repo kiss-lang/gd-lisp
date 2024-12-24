@@ -390,10 +390,14 @@ func _initialize():
 		var _let6 = func(num):
 			return (num > 0)
 		var _arg30 = _let6.call(countDownList.front())
-		truthy(_arg30)
+		return truthy(_arg30)
 	while _whileCond0.call():
 		assert((countDownList.pop_front() > 0))
 	################################################
+
+	#(assertEq 1 (countDownList.size))
+	assertEquals(1, countDownList.size())
+	######################################
 
 	#(assertEq 0 (.front [0 1]))
 	assertEquals(0, [0, 1].front())
@@ -450,6 +454,36 @@ func _initialize():
 	var _arg47 = _let10.call(arr2.pop_front(), arr2.pop_back())
 	assertEquals(1, _arg47)
 	############################################################
+
+	#(set arr2 [3 2 1])
+	arr2 = [3, 2, 1]
+	###################
+
+	#(whileLet [front (arr2.pop_front)]
+	#	(assert (> front 0)))
+	var _whileCond1 = func ():
+		var _let14 = func(front):
+			var _and21 = func():
+				var _arg66 = not_null(front)
+				if truthy(_arg66) != true:
+					return _arg66
+				return _arg66
+			var _arg65 = _and21.call()
+			if truthy(_arg65):
+				assert((front > 0))
+				return true
+			else:
+				return false
+		var _arg63 = _let14.call(arr2.pop_front())
+		return truthy(_arg63)
+	while _whileCond1.call():
+		pass
+	############################################
+
+	#(assertEq 0 (arr2.size))
+	assertEquals(0, arr2.size())
+	#############################
+
 
 	quit()
 #(func global_func [a b c]

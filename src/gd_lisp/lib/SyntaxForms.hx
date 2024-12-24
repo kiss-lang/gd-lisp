@@ -59,7 +59,6 @@ class SyntaxForms {
         syntaxForm("_return", {
             g.pushContext(Return);
             var code = g.convert(args[0]);
-            g.tryPopContext();
             code;
         });
 
@@ -83,15 +82,17 @@ class SyntaxForms {
         var letNum = 0;
         syntaxForm("let", {
             var b = wholeExp.expBuilder();
+            var letName = '_let${letNum++}';
             var bindings = Prelude.groups(Prelude.bindingList(args[0], "let"), 2);
             var code = '';
-            code += 'var _let${letNum} = func(${[for (binding in bindings) Prelude.symbolNameValue(binding[0])].join(", ")}):\n';
+            code += 'var ${letName} = func(${[for (binding in bindings) Prelude.symbolNameValue(binding[0])].join(", ")}):\n';
             g.tab();
 
             switch (g.context()) {
-                case Capture(_):
-                    g.pushContext(Return);
+                case None:
+                    g.pushContext(None);
                 default:
+                    g.pushContext(Return);
             }
 
             code += g.convert(b.begin(args.slice(1)));
@@ -99,8 +100,7 @@ class SyntaxForms {
             code = code.rtrim();
             code += '\n';
 
-            code += g.convert(b.callSymbol('_let${letNum++}.call', [for (binding in bindings) binding[1]]));
-            g.tryPopContext();
+            code += g.convert(b.callSymbol('${letName}.call', [for (binding in bindings) binding[1]]));
             code;
         });
 
@@ -336,7 +336,7 @@ class SyntaxForms {
                 cond = b.callSymbol("truthy", [cond]);
             }
 
-            var convertedCond = g.convert(cond).rtrim();
+            var convertedCond = g.convertWithoutContext(cond).rtrim();
             // Multiline conditions need to expand their arguments each time
             if (convertedCond.split("\n").length > 1) {
                 var condLambda = '_whileCond${whileCondNum++}';
@@ -371,14 +371,21 @@ class SyntaxForms {
             code;
         });
 
+        syntaxForm("whileLet", {
+            var b = wholeExp.expBuilder();
+            return g.convert(b.callSymbol("while", [
+                b.callSymbol("ifLet", [args[0],
+                    b.begin(args.slice(1).concat([b.symbol("true")])),
+                    b.symbol("false")]), b.symbol("pass")]));
+        });
+
         return map;
     }
 
     static var collectionNum = 0;
     public static function _for(wholeExp:ReaderExp, args:Array<ReaderExp>, g:GDLispStateT, arr:Bool) {
         // Get the name for each element
-        g.pushContext(None);
-        var elemName = g.convert(args[0]).rtrim();
+        var elemName = g.convertWithoutContext(args[0]).rtrim();
         // Capture the collection to iterate
         var code = g.captureArgs([args[1]]);
         if (code.length > 0) code += '\n';

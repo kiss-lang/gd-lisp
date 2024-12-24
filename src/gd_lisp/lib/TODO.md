@@ -40,7 +40,7 @@
 - [x] callField
 
 - [x] `ifLet`
-- [ ] `whileLet`
+- [x] `whileLet`
 
 - [ ] string multiplication
 - [ ] $ reader macro

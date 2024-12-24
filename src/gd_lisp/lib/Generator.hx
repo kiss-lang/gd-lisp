@@ -8,6 +8,7 @@ import sys.io.File;
 
 using StringTools;
 using kiss.ExpBuilder;
+using kiss.Reader;
 using gd_lisp.lib.Generator;
 using gd_lisp.lib.GDLispState;
 
@@ -110,7 +111,13 @@ class Generator {
         return code;
     }
 
+    public static function convertWithoutContext(g:GDLispStateT, exp:ReaderExp, _inline = false):String {
+        g.pushContext(None);
+        return g.convert(exp, _inline);
+    }
+
     public static function convert(g: GDLispStateT, exp:ReaderExp, _inline = false):String {
+        Sys.println('Converting ${exp.def.toString()} in context ${g.contextStack}');
         var globalTab = g.tabLevel;
         g.tabLevel = "";
 

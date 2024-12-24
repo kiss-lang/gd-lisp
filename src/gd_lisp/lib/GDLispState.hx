@@ -80,7 +80,6 @@ class GDLispState {
     }
 
     public static function context(g:GDLispStateT) {
-        trace(g.contextStack);
         return g.contextStack[g.contextStack.length - 1];
     }
 
@@ -90,7 +89,6 @@ class GDLispState {
 
     public static function tryPopContext(g:GDLispStateT) {
         return if (g.contextStack.length > 1) {
-            trace(g.context());
             g.contextStack.pop();
         } else {
             None;
