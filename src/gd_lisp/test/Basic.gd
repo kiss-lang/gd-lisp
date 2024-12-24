@@ -392,6 +392,10 @@ func _initialize():
 		assert((countDownList.pop_front() > 0))
 	################################################
 
+	#(assertEq 0 (.front [0 1]))
+	assertEquals(0, [0, 1].front())
+	################################
+
 
 	quit()
 #(func global_func [a b c]

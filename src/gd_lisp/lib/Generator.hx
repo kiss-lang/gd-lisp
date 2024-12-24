@@ -128,9 +128,12 @@ class Generator {
             default:
                 // Basic expressions
                 switch (exp.def) {
-                    case CallExp({def:Symbol(name)}, args):
+                    case CallExp(callable, args):
+                        code += g.captureArgs([callable]);
                         code += g.captureArgs(args);
-                        code += g.inContext('$name(${g.popCapturedArgs().join(", ")})');
+                        var argValues = g.popCapturedArgs();
+                        var callableValue = g.popCapturedArgs()[0];
+                        code += g.inContext('${callableValue}(${argValues.join(", ")})');
                     case ListExp(elements):
                         code += g.captureArgs(elements);
                         code += g.inContext('[${g.popCapturedArgs().join(", ")}]');
@@ -173,6 +176,9 @@ class Generator {
                     case KeyValueExp(key, value):
                         code += g.captureArgs([key, value]);
                         code += g.inContext('KVPair_.make(${g.popCapturedArgs().join(", ")})');
+                    case FieldExp(field, exp, _):
+                        code += g.captureArgs([exp]);
+                        code += g.inContext('${g.popCapturedArgs()[0]}.${field}');
                     default:
                         throw 'expression ${Reader.toString(exp.def)} cannot be converted!';
                 }
