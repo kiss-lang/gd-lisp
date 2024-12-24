@@ -253,6 +253,41 @@ func _initialize():
 	assertEquals(4, start)
 	#######################
 
+	#(var dict {})
+	var dict = {}
+	##############
+
+	#(assertEq TYPE_DICTIONARY (typeof dict))
+	assertEquals(TYPE_DICTIONARY, typeof(dict))
+	############################################
+
+	#(set dict {=>"key" 5 =>"key2" 6})
+	var _arg27 = {
+		"key": 5,
+		"key2": 6
+	}
+	
+	dict = _arg27
+	##################################
+
+	#(assertEq 5 (dict.get "key"))
+	assertEquals(5, dict.get("key"))
+	#################################
+
+	#(assertEq 6 (dict.get "key2"))
+	assertEquals(6, dict.get("key2"))
+	##################################
+
+	#(var val {(print "thing") (print "thing2") 5})
+	_gdprint("thing")
+	_gdprint("thing2")
+	var val = 5
+	###############################################
+
+	#(assertEq 5 val)
+	assertEquals(5, val)
+	#####################
+
 
 	quit()
 #(func global_func [a b c]

@@ -3,6 +3,7 @@ package gd_lisp.lib;
 import kiss.Reader;
 import kiss.ReaderExp;
 import kiss.Stream;
+import kiss.Prelude;
 import sys.io.File;
 
 using StringTools;
@@ -133,6 +134,34 @@ class Generator {
                     case ListExp(elements):
                         code += g.captureArgs(elements);
                         code += g.popContextPrefix() + '[${g.popCapturedArgs().join(", ")}]';
+                    // Empty dictionary
+                    case BraceExp([]):
+                        code += '${g.popContextPrefix()}{}';
+                    case BraceExp(elements):
+                        // Dictionary with elements
+                        switch(elements[0].def) {
+                            case KeyValueExp(_, _):
+                                var keyExps = [];
+                                var valueExps = [];
+                                for (element in elements) switch(element.def) {
+                                    case KeyValueExp(key, value):
+                                        keyExps.push(key);
+                                        valueExps.push(value);
+                                    default:
+                                        throw 'bad expression in dictionary literal';
+                                }
+                                code += g.captureArgs(valueExps);
+                                var pairs = Prelude._zip([keyExps, g.popCapturedArgs()], Throw);
+                                code += '${g.popContextPrefix()}{\n';
+                                g.tab();
+                                code += [for (pair in pairs) '${g.convert(pair[0]).rtrim()}: ${pair[1]}'].join(",\n") + '\n';
+                                g.untab();
+                                code += '}';
+                            default:
+                                // Code block
+                                code += g.convert(b.callSymbol("begin", elements));
+                        }
+
                     case Symbol(name):
                         code += g.popContextPrefix() + name;
                     case StrExp(str):

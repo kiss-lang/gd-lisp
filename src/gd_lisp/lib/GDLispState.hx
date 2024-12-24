@@ -25,7 +25,9 @@ enum Context {
 class GDLispState {
     public static function defaultState():GDLispStateT {
 
-        var readTable = Reader.builtins();
+        var readTable = Reader.builtins({
+            keepBraceExps: true
+        });
 
         readTable['#'] = (stream:Stream, k:HasReadTables) -> null;
 

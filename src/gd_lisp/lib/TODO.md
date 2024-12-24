@@ -28,7 +28,7 @@
 
 - [x] `nth`
 - [x] += etc.
-- [ ] dict expressions
+- [x] dict expressions
 
 - [ ] arrow lambda (just alias lambda to func?)
 
