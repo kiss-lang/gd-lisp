@@ -31,7 +31,9 @@ class GDLispState {
             keepBraceExps: true
         });
 
+        // Multiline expressions will have # at the start of every line
         readTable['#'] = (stream:Stream, k:HasReadTables) -> null;
+        readTable['@'] = (stream:Stream, k:HasReadTables) -> Symbol("breakpoint");
 
         return {
             readTable: readTable,
