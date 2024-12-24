@@ -36,9 +36,14 @@ class Generator {
 
         var stream = Stream.fromFile(file);
         
+        // gd-lisp snippets are inserted into Gdscript by putting a top-level gd-lisp expression
+        // in a comment immediately after the '#'
+        var gdLispStarters = ['(', '@', '{'];
+        gdLispStarters = [for (starter in gdLispStarters) '#${starter}'];
+
         function findNextGDLisp() {
             stream.linePrefix = '';
-            code += switch(stream.takeUntil('#(', true)) {
+            code += switch(stream.takeUntilOneOf(gdLispStarters, true)) {
                 case Some(gdscript):
                     gdscript;
                 case None:

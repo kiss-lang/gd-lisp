@@ -484,6 +484,11 @@ func _initialize():
 	assertEquals(0, arr2.size())
 	#############################
 
+	#{(assertEq 0 0) (assertEq 1 1)}
+	assertEquals(0, 0)
+	assertEquals(1, 1)
+	################################
+
 
 	quit()
 #(func global_func [a b c]
