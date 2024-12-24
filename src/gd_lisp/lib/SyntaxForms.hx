@@ -9,6 +9,7 @@ import kiss.Prelude;
 import kiss.ReaderExp;
 import gd_lisp.lib.GDLispState;
 using StringTools;
+using kiss.Prelude;
 using kiss.ExpBuilder;
 using gd_lisp.lib.GDLispState;
 using gd_lisp.lib.Generator;
@@ -377,6 +378,37 @@ class SyntaxForms {
                 b.callSymbol("ifLet", [args[0],
                     b.begin(args.slice(1).concat([b.symbol("true")])),
                     b.symbol("false")]), b.symbol("pass")]));
+        });
+
+        syntaxForm("_enum", {
+            var code = '';
+            var type = args[0].symbolNameValue();
+
+            code +=
+'class ${type}:
+	var constructor
+	var args
+
+	static func make(c, a):
+		var e = ${type}.new()
+		e.constructor = c
+		e.args = a
+		return e
+
+';
+
+            for (constructor in args.slice(1)) {
+                switch (constructor.def) {
+                    case Symbol(name):
+                        code += '	static func ${name}(): return ${type}.make("${name}", [])\n';
+                    case CallExp({def:Symbol(name)}, args):
+                        var args = [for (arg in args) arg.symbolNameValue()];
+                        code += '	static func ${name}(${args.join(", ")}): return ${type}.make("${name}", [${args.join(", ")}])\n';
+                    default:
+                }
+            }
+
+            code;
         });
 
         return map;

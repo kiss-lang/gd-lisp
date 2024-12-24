@@ -56,6 +56,7 @@ class GDLispState {
             identAliases: [],
             callAliases: [
                 "print" => Symbol("_gdprint"),
+                "enum" => Symbol("_enum"),
                 "+" => Symbol("plus"),
                 "+=" => Symbol("plusEquals"),
                 "-" => Symbol("minus"),
