@@ -164,7 +164,7 @@ class SyntaxForms {
             var code = g.captureArgs(args);
             if (code.length > 0) code += '\n';
             var pairs = Prelude.pairs(g.popCapturedArgs());
-            code += g.inContext('(' + [for (pair in pairs) pair[0] + op + pair[1]].join(' && ') + ')');
+            code += g.inContext('(' + [for (pair in pairs) pair[0] + ' ${op} ' + pair[1]].join(' && ') + ')');
             return code;
         }
 
