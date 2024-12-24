@@ -33,8 +33,21 @@ class GDLispState {
 
         // Multiline expressions will have # at the start of every line
         readTable['#'] = (stream:Stream, k:HasReadTables) -> null;
+        // @ inserts a breakpoint
         readTable['@'] = (stream:Stream, k:HasReadTables) -> Symbol("breakpoint");
-
+        // $ lets gdscript handle its own $ syntax
+        readTable['$'] = (stream:Stream, k:HasReadTables) -> {
+            var str = "$";
+            str += switch (stream.peekChars(1)) {
+                // if the path literal starts with " or ', take the rest of it
+                case Some(quote) if (['"', "'"].contains(quote)):
+                    stream.dropString(quote);
+                    quote + stream.expect('', () -> stream.takeUntilAndDrop(quote)) + quote;
+                default:
+                    stream.expect('', () ->stream.takeUntilOneOf(Reader.whitespace));
+            };
+            RawHaxeBlock(str);
+        };
         return {
             readTable: readTable,
             startOfLineReadTable: [],

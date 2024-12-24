@@ -489,7 +489,6 @@ func _initialize():
 	assertEquals(1, 1)
 	################################
 
-
 	quit()
 #(func global_func [a b c]
 #	(return (+ a b c)))

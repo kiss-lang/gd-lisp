@@ -42,8 +42,8 @@
 - [x] `ifLet`
 - [x] `whileLet`
 
-- [ ] $ reader macro
-- [ ] breakpoint reader macro create `breakpoint` before expression
+- [x] $ reader macro
+- [x] breakpoint reader macro create `breakpoint` before expression
 
 - [ ] Algebraic data types: data type that stores enum type and constructor as strings, arguments as array of variants
 - [ ] `case`

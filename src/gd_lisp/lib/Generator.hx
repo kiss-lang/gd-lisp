@@ -191,6 +191,8 @@ class Generator {
                     case FieldExp(field, exp, _):
                         code += g.captureArgs([exp]);
                         code += g.inContext('${g.popCapturedArgs()[0]}.${field}');
+                    case RawHaxeBlock(_code):
+                        code += g.inContext(_code);
                     default:
                         throw 'expression ${Reader.toString(exp.def)} cannot be converted!';
                 }
