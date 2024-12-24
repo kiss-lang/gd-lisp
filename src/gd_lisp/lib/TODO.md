@@ -29,14 +29,15 @@
 - [x] `nth`
 - [x] += etc.
 - [x] dict expressions
+- [ ] `for` -- also support dictionaries
 
 - [ ] arrow lambda (just alias lambda to func?)
 
 - [ ] `while` will actually be tricky--if the args need expansion, the condition needs to be wrapped in a function so they expand every time!
-- [ ] `for` -- also support dictionaries
 - [ ] `ifLet`
 
 - [ ] Document forms and check their arg number
+- [ ] Proper error messages with line numbers
 - [ ] Add GENERATED, MODIFIED tags to blocks
 - [ ] Algebraic data types: data type that stores enum type and constructor as strings, arguments as array of variants
 - [ ] `case`

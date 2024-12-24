@@ -20,6 +20,7 @@ enum Context {
     Return;
     Capture(varName:String);
     Set(varName:String);
+    Append(arrName:String);
 }
 
 class GDLispState {
@@ -56,7 +57,8 @@ class GDLispState {
                 "assertEq" => Symbol("assertEquals"),
                 "var" => Symbol("_var"),
                 "not" => Symbol("_not"),
-                "if" => Symbol("_if")
+                "if" => Symbol("_if"),
+                "for" => Symbol("_for")
             ],
             syntaxForms: SyntaxForms.builtins(),
             tabLevel: "",
@@ -101,9 +103,25 @@ class GDLispState {
                 'var $varName = ';
             case Set(varName):
                 '$varName = ';
+            case Append(arrName):
+                '${arrName}.append(';
             default:
                 '';
         };
+    }
+
+    public static function contextSuffix(g:GDLispStateT) {
+        return switch (g.context()) {
+            case Append(arrName):
+                ')';
+            default:
+                '';
+        }
+    }
+
+    public static function inContext(g:GDLispStateT, codeLine:String) {
+        var suffix = g.contextSuffix();
+        return '${g.popContextPrefix()}${codeLine}${suffix}';
     }
 
     public static function popCapturedArgs(g:GDLispStateT) {

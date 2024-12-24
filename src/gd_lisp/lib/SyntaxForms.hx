@@ -115,9 +115,10 @@ class SyntaxForms {
             };
             var funcArgs = Prelude.argList(args[argListIdx], 'func');
             var bodyExps = args.slice(argListIdx+1);
+            var suffix = g.contextSuffix();
             var code = g.popContextPrefix() + 'func ${name}(${[for (arg in funcArgs) Prelude.symbolNameValue(arg)].join(", ")}):\n';
             g.tab();
-            code += g.convert(b.begin(bodyExps));
+            code += g.convert(b.begin(bodyExps)) + suffix;
             return code;
         });
 
@@ -130,7 +131,8 @@ class SyntaxForms {
             }
             var code = g.captureArgs(args);
             if (code.length > 0) code += '\n';
-            return '${code}${g.popContextPrefix()}(' + g.popCapturedArgs().join(' ${op} ') + ')';
+            code += g.inContext('(' + g.popCapturedArgs().join(' ${op} ') + ')');
+            return code;
         }
 
         var rhsNum = 0;
@@ -141,7 +143,8 @@ class SyntaxForms {
             var b = args[1].expBuilder();
             var code = g.captureArgs([b.callSymbol(rhsOp, args.slice(1))]);
             if (code.length > 0) code += '\n';
-            return '${code}${g.popContextPrefix()}${g.convert(args[0]).rtrim()} ${op}= ${g.popCapturedArgs()[0]}';
+            code += g.inContext('${g.convert(args[0]).rtrim()} ${op}= ${g.popCapturedArgs()[0]}');
+            return code;
         }
 
         syntaxForm("plus", {
@@ -176,7 +179,8 @@ class SyntaxForms {
             var code = g.captureArgs(args);
             if (code.length > 0) code += '\n';
             var pairs = Prelude.pairs(g.popCapturedArgs());
-            return '${code}${g.popContextPrefix()}(' + [for (pair in pairs) pair[0] + op + pair[1]].join(' && ') + ')';
+            code += g.inContext('(' + [for (pair in pairs) pair[0] + op + pair[1]].join(' && ') + ')');
+            return code;
         }
 
         syntaxForm("lesser", {
@@ -333,6 +337,40 @@ class SyntaxForms {
                 }
             }];
             ifElse(branches, g);
+        });
+
+        var collectionNum = 0;
+        syntaxForm("_for", {
+            // Get the name for each element
+            g.pushContext(None);
+            var elemName = g.convert(args[0]).rtrim();
+            // Capture the collection to iterate
+            var code = g.captureArgs([args[1]]);
+            if (code.length > 0) code += '\n';
+            var containerExp = g.popCapturedArgs()[0];
+
+            var collecting = null;
+            switch(g.context()) {
+                case None:
+                default:
+                    collecting = '_collection${collectionNum}';
+                    code += 'var ${collecting} = []\n';
+            }
+            if (collecting != null) {
+                g.pushContext(Append(collecting));
+            } else {
+                g.pushContext(None);
+            }
+            g.tab();
+            var b = args[2].expBuilder();
+            var bodyCode = g.convert(b.begin(args.slice(2)));
+            g.untab();
+            code += 'for ${elemName} in ${containerExp}:\n';
+            code += bodyCode;
+            if (collecting != null) {
+                code += '${g.popContextPrefix()}${collecting}';
+            }
+            return code;
         });
 
         return map;

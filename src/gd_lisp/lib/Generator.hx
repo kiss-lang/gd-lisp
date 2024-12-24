@@ -130,13 +130,13 @@ class Generator {
                 switch (exp.def) {
                     case CallExp({def:Symbol(name)}, args):
                         code += g.captureArgs(args);
-                        code += g.popContextPrefix() + '$name(${g.popCapturedArgs().join(", ")})';
+                        code += g.inContext('$name(${g.popCapturedArgs().join(", ")})');
                     case ListExp(elements):
                         code += g.captureArgs(elements);
-                        code += g.popContextPrefix() + '[${g.popCapturedArgs().join(", ")}]';
+                        code += g.inContext('[${g.popCapturedArgs().join(", ")}]');
                     // Empty dictionary
                     case BraceExp([]):
-                        code += '${g.popContextPrefix()}{}';
+                        code += g.inContext('{}');
                     case BraceExp(elements):
                         // Dictionary with elements
                         switch(elements[0].def) {
@@ -152,20 +152,21 @@ class Generator {
                                 }
                                 code += g.captureArgs(valueExps);
                                 var pairs = Prelude._zip([keyExps, g.popCapturedArgs()], Throw);
+                                var suffix = g.contextSuffix();
                                 code += '${g.popContextPrefix()}{\n';
                                 g.tab();
                                 code += [for (pair in pairs) '${g.convert(pair[0]).rtrim()}: ${pair[1]}'].join(",\n") + '\n';
                                 g.untab();
-                                code += '}';
+                                code += '}${suffix}';
                             default:
                                 // Code block
                                 code += g.convert(b.callSymbol("begin", elements));
                         }
 
                     case Symbol(name):
-                        code += g.popContextPrefix() + name;
+                        code += g.inContext(name);
                     case StrExp(str):
-                        code += g.popContextPrefix() + '"' + str + '"';
+                        code += g.inContext('"' + str + '"');
                     default:
                         throw 'expression ${Reader.toString(exp.def)} cannot be converted!';
                 }

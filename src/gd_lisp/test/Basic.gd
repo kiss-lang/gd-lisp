@@ -288,6 +288,14 @@ func _initialize():
 	assertEquals(5, val)
 	#####################
 
+	#(print (for a (range 5) a))
+	var _collection0 = []
+	for a in range(5):
+		_collection0.append(a)
+	var _arg28 = _collection0
+	_gdprint(_arg28)
+	############################
+
 
 	quit()
 #(func global_func [a b c]
