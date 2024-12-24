@@ -352,6 +352,25 @@ class SyntaxForms {
             code;
         });
 
+        syntaxForm("ifLet", {
+            var bindingList = Prelude.bindingList(args[0], "ifLet");
+            var bindings = Prelude.groups(bindingList, 2);
+            var names = [for (pair in bindings) pair[0]];
+            var b = wholeExp.expBuilder();
+            var thenExp = args[1];
+            var elseExp = null;
+            if (args.length > 2) {
+                elseExp = args[2];
+            }
+            var cond = b.callSymbol("and", [
+                for (name in names) b.callSymbol("not_null", [name])
+            ]);
+            var code = g.convert(b.let(bindingList, [
+                b._if(cond, thenExp, elseExp)
+            ]));
+            code;
+        });
+
         return map;
     }
 

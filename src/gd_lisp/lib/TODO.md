@@ -39,7 +39,8 @@
 - [x] `while` will actually be tricky--if the args need expansion, the condition needs to be wrapped in a function so they expand every time!
 - [x] callField
 
-- [ ] `ifLet`
+- [x] `ifLet`
+- [ ] `whileLet`
 
 - [ ] string multiplication
 - [ ] $ reader macro

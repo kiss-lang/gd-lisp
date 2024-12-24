@@ -11,6 +11,9 @@ func truthy(v):
 		return v
 	return v != null
 
+func not_null(v):
+	return v != null
+
 func _not(v):
 	return !truthy(v)
 
@@ -396,6 +399,57 @@ func _initialize():
 	assertEquals(0, [0, 1].front())
 	################################
 
+	#(var arr2 [0])
+	var arr2 = [0]
+	###############
+
+	#(assertEq false
+	#	(ifLet [front (arr2.pop_front) back (arr2.pop_back)]
+	#			true
+	#		false))
+	var _let8 = func(front, back):
+		var _and9 = func():
+			var _arg40 = not_null(front)
+			if truthy(_arg40) != true:
+				return _arg40
+			var _arg41 = not_null(back)
+			if truthy(_arg41) != true:
+				return _arg41
+			return _arg41
+		var _arg39 = _and9.call()
+		if truthy(_arg39):
+			return true
+		else:
+			return false
+	var _arg36 = _let8.call(arr2.pop_front(), arr2.pop_back())
+	assertEquals(false, _arg36)
+	###########################################################
+
+	#(set arr2 [0 1])
+	arr2 = [0, 1]
+	#################
+
+	#(assertEq 1
+	#	(ifLet [front (arr2.pop_front) back (arr2.pop_back)]
+	#			back
+	#		0))
+	var _let10 = func(front, back):
+		var _and13 = func():
+			var _arg51 = not_null(front)
+			if truthy(_arg51) != true:
+				return _arg51
+			var _arg52 = not_null(back)
+			if truthy(_arg52) != true:
+				return _arg52
+			return _arg52
+		var _arg50 = _and13.call()
+		if truthy(_arg50):
+			return back
+		else:
+			return 0
+	var _arg47 = _let10.call(arr2.pop_front(), arr2.pop_back())
+	assertEquals(1, _arg47)
+	############################################################
 
 	quit()
 #(func global_func [a b c]

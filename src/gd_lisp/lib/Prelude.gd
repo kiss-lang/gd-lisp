@@ -8,6 +8,9 @@ func truthy(v):
 		return v
 	return v != null
 
+func not_null(v):
+	return v != null
+
 func _not(v):
 	return !truthy(v)
 
