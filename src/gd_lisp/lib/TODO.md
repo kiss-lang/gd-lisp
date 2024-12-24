@@ -36,17 +36,22 @@
 - [x] `setNth`
 - [x] arrow lambda
 
-- [ ] `while` will actually be tricky--if the args need expansion, the condition needs to be wrapped in a function so they expand every time!
+- [x] `while` will actually be tricky--if the args need expansion, the condition needs to be wrapped in a function so they expand every time!
+- [ ] callField
+
 - [ ] `ifLet`
 
+- [ ] string multiplication
+- [ ] $ reader macro
+- [ ] breakpoint reader macro create `breakpoint` before expression
+
+- [ ] Algebraic data types: data type that stores enum type and constructor as strings, arguments as array of variants
+- [ ] `case`
+
+- [ ] Add GENERATED, MODIFIED tags to blocks
 
 - [ ] Document forms and check their arg number
 - [ ] Proper error messages with line numbers
-- [ ] Add GENERATED, MODIFIED tags to blocks
-- [ ] Algebraic data types: data type that stores enum type and constructor as strings, arguments as array of variants
-- [ ] `case`
-- [ ] string multiplication
-- [ ] $ reader macro
 
 - [ ] Make prelude compiled in/relative
 - [ ] Make gd-lisp run from command line as either compiled node or python

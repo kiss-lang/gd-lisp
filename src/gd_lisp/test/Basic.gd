@@ -351,6 +351,47 @@ func _initialize():
 	assertEquals(6, lambd2.call(1))
 	################################
 
+	#(var countDown 100)
+	var countDown = 100
+	####################
+
+	#(var countUp 0)
+	var countUp = 0
+	################
+
+	#(while (> countDown 0)
+	#	(-= countDown 1)
+	#	(+= countUp 1))
+	while (countDown > 0):
+		countDown -= (0 + 1)
+		countUp += (0 + 1)
+	#######################
+
+	#(assertEq 0 countDown)
+	assertEquals(0, countDown)
+	###########################
+
+	#(assertEq 100 countUp)
+	assertEquals(100, countUp)
+	###########################
+
+	#(var countDownList [5 4 3 2 1 0])
+	var countDownList = [5, 4, 3, 2, 1, 0]
+	#######################################
+
+	#(while
+	#	(let [num (countDownList.front)]
+	#		(> num 0))
+	#	(assert (> (countDownList.pop_front) 0)))
+	var _whileCond0 = func ():
+		var _let6 = func(num):
+			return (num > 0)
+		var _arg30 = _let6.call(countDownList.front())
+		truthy(_arg30)
+	while _whileCond0.call():
+		assert((countDownList.pop_front() > 0))
+	################################################
+
 
 	quit()
 #(func global_func [a b c]

@@ -59,7 +59,8 @@ class GDLispState {
                 "var" => Symbol("_var"),
                 "not" => Symbol("_not"),
                 "if" => Symbol("_if"),
-                "for" => Symbol("_for")
+                "for" => Symbol("_for"),
+                "while" => Symbol("_while")
             ],
             syntaxForms: SyntaxForms.builtins(),
             tabLevel: "",

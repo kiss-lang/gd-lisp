@@ -326,6 +326,32 @@ class SyntaxForms {
 
         map["_for"] = _for.bind(_, _, _, true);
 
+        var whileCondNum = 0;
+        syntaxForm("_while", {
+            var code = '';
+            var cond = args[0];
+            var b = cond.expBuilder();
+            var body = args.slice(1);
+            if (mustWrapTruthy(cond)) {
+                cond = b.callSymbol("truthy", [cond]);
+            }
+
+            var convertedCond = g.convert(cond).rtrim();
+            // Multiline conditions need to expand their arguments each time
+            if (convertedCond.split("\n").length > 1) {
+                var condLambda = '_whileCond${whileCondNum++}';
+                code += g.convert(
+                    b.callSymbol("var", [b.symbol(condLambda),
+                        b.callSymbol("lambda", [b.list([]), cond])]));
+                code += 'while ${condLambda}.call():\n';
+            } else {
+                code += 'while ${convertedCond}:\n';
+            }
+            g.tab();
+            code += g.convert(body[0].expBuilder().begin(body));
+            code;
+        });
+
         return map;
     }
 
