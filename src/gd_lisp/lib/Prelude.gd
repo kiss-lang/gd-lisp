@@ -45,8 +45,14 @@ class KVPair_:
 	var key
 	var value
 
-	static func make(key, value):
-		var pair = KVPair_.new()
-		pair.key = key
-		pair.value = value
-		return pair
+	func _init(key, value):
+		self.key = key
+		self.value = value
+
+class EnumValue:
+	var constructor
+	var args
+
+	func _init(constructor, args):
+		self.constructor = constructor
+		self.args = args

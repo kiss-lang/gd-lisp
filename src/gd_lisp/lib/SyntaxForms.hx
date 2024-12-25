@@ -386,24 +386,18 @@ class SyntaxForms {
 
             code +=
 'class ${type}:
-	var constructor
-	var args
-
-	static func make(c, a):
-		var e = ${type}.new()
-		e.constructor = c
-		e.args = a
-		return e
-
+	extends EnumValue
+	func _init(constructor, args):
+		super(constructor, args)
 ';
 
             for (constructor in args.slice(1)) {
                 switch (constructor.def) {
                     case Symbol(name):
-                        code += '	static func ${name}(): return ${type}.make("${name}", [])\n';
+                        code += '	static var ${name} = ${type}.new("${name}", [])\n';
                     case CallExp({def:Symbol(name)}, args):
                         var args = [for (arg in args) arg.symbolNameValue()];
-                        code += '	static func ${name}(${args.join(", ")}): return ${type}.make("${name}", [${args.join(", ")}])\n';
+                        code += '	static func ${name}(${args.join(", ")}): return ${type}.new("${name}", [${args.join(", ")}])\n';
                     default:
                 }
             }

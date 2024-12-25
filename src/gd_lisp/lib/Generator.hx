@@ -187,7 +187,7 @@ class Generator {
                         code += g.inContext('"' + str + '"');
                     case KeyValueExp(key, value):
                         code += g.captureArgs([key, value]);
-                        code += g.inContext('KVPair_.make(${g.popCapturedArgs().join(", ")})');
+                        code += g.inContext('KVPair_.new(${g.popCapturedArgs().join(", ")})');
                     case FieldExp(field, exp, _):
                         code += g.captureArgs([exp]);
                         code += g.inContext('${g.popCapturedArgs()[0]}.${field}');

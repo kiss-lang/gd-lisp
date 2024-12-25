@@ -48,29 +48,29 @@ class KVPair_:
 	var key
 	var value
 
-	static func make(key, value):
-		var pair = KVPair_.new()
-		pair.key = key
-		pair.value = value
-		return pair
+	func _init(key, value):
+		self.key = key
+		self.value = value
+
+class EnumValue:
+	var constructor
+	var args
+
+	func _init(constructor, args):
+		self.constructor = constructor
+		self.args = args
 #########################################################################################################################################
 
 #(enum Option
 #	(Some value)
 #	None)
 class Option:
-	var constructor
-	var args
-
-	static func make(c, a):
-		var e = Option.new()
-		e.constructor = c
-		e.args = a
-		return e
-
-	static func Some(value): return Option.make("Some", [value])
-	static func None(): return Option.make("None", [])
-#############################################################
+	extends EnumValue
+	func _init(constructor, args):
+		super(constructor, args)
+	static func Some(value): return Option.new("Some", [value])
+	static var None = Option.new("None", [])
+############################################################
 
 
 func _initialize():

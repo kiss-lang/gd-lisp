@@ -48,11 +48,17 @@ class KVPair_:
 	var key
 	var value
 
-	static func make(key, value):
-		var pair = KVPair_.new()
-		pair.key = key
-		pair.value = value
-		return pair
+	func _init(key, value):
+		self.key = key
+		self.value = value
+
+class EnumValue:
+	var constructor
+	var args
+
+	func _init(constructor, args):
+		self.constructor = constructor
+		self.args = args
 #########################################################################################################################################
 	
 func _initialize():
@@ -332,7 +338,7 @@ func _initialize():
 	#(var dict_comp {for key ["a" "b" "c"] =>key 5})
 	var _collection1 ={}
 	for key in ["a", "b", "c"]:
-		dictSet(_collection1, KVPair_.make(key, 5))
+		dictSet(_collection1, KVPair_.new(key, 5))
 	var dict_comp = _collection1
 	################################################
 
