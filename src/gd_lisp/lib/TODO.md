@@ -45,18 +45,18 @@
 - [x] $ reader macro
 - [x] breakpoint reader macro create `breakpoint` before expression
 
-- [ ] Algebraic data types: data type that stores enum type and constructor as strings, arguments as array of variants
-- [ ] `case`
+- [x] Algebraic data types: data type that stores enum type and constructor as strings, arguments as array of variants
+- [x] `match`
 
 - [ ] Add GENERATED, MODIFIED tags to blocks
 
-- [ ] Document forms and check their arg number
-- [ ] Proper error messages with line numbers
-
 - [ ] Make prelude compiled in/relative
-- [ ] Make gd-lisp run from command line as either compiled node or python
+- [ ] Make gd-lisp generator run from command line as either compiled node or python
 - [ ] Make gd-lisp run in Godot editor
 - [ ] Make gd-lisp run in VSCode
 
 - [ ] collapse the generated blocks in VScode
 - [ ] collapse the generated blocks in Godot editor
+
+- [ ] Document forms and check their arg number
+- [ ] Proper error messages with line numbers
