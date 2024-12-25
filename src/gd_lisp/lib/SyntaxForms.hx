@@ -386,7 +386,7 @@ class SyntaxForms {
 
             code +=
 'class ${type}:
-	extends EnumValue
+	extends EnumValue_
 	func _init(constructor, args):
 		super(constructor, args)
 ';
@@ -402,6 +402,93 @@ class SyntaxForms {
                 }
             }
 
+            code;
+        });
+
+        function isUpperCase(s:String) {
+            return (s.toUpperCase() == s);
+        }
+        function isNumber(s:String) {
+            return (Std.parseFloat(s) != Math.NaN);
+        }
+        function matchPattern(pattern:ReaderExp, g:GDLispStateT) {
+            var code = '';
+
+            var guardCondition = null;
+            switch (pattern.def) {
+                case CallExp({def:Symbol("when")}, [condition, innerPattern]):
+                    guardCondition = condition;
+                    code += matchPattern(innerPattern, g);
+                case CallExp({def:Symbol("or")}, patterns):
+                    code += [for (innerPattern in patterns) matchPattern(innerPattern, g)].join(", ");
+                // Other callexps are enums with args which should be processed as a list would be
+                case CallExp({def:Symbol(constructor)}, argPatterns):
+                    code += '["${constructor}", ' + [for (argPattern in argPatterns) matchPattern(argPattern, g)].join(", ") + ']';
+                // Number literals
+                case Symbol(number) if (isNumber(number)):
+                    code += number;
+                // String literals
+                case StrExp(str):
+                    code += '"${str}"';
+                // Capital idents are enum constructors
+                case Symbol(name) if (isUpperCase(name.substr(0, 1))):
+                    code += '["${name}"]';
+                case Symbol(ident):
+                    code += 'var ${ident}';
+                case ListExp(patterns):
+                    code += '[';
+                    code += [for (innerPattern in patterns) matchPattern(innerPattern, g)].join(", ");
+                    code += ']';
+                default:
+            }
+
+            if (guardCondition != null) {
+                var guardCode = g.convertWithoutContext(guardCondition).rtrim();
+                if (guardCode.split("\n").length > 1) {
+                    throw "multi-line match case guard not supported";
+                }
+                code += ' when ${guardCode}';
+            }
+
+            return code;
+        }
+
+        function matchCase(exp:ReaderExp, g:GDLispStateT) {
+            var code = '';
+            switch(exp.def) {
+                case CallExp(pattern, body):
+                    code += matchPattern(pattern, g) + ':\n';
+                    g.tab();
+                    code += g.convert(body[0].expBuilder().begin(body));
+                    g.untab();
+                default:
+            }
+
+            return code;
+        }
+
+        syntaxForm("match", {
+            var code = g.captureArgs([args[0]], true);
+            var arg = g.popCapturedArgs()[0];
+            code += 
+'if ${arg} is EnumValue_:
+	${arg} = ${arg}.match_list()\n';
+            g.tab();
+            var innerContext = None;
+            switch (g.tryPopContext()) {
+                case Capture(varName):
+                    code += 'var ${varName} = null\n';
+                    innerContext = Set(varName);
+                case other:
+                    innerContext = other;
+            }
+            code += 'match ${arg}:\n';
+            for (pattern in args.slice(1)) {
+                g.pushContext(innerContext);
+                code += g.tabLevel + matchCase(pattern, g);
+            }
+            g.untab();
+            g.tryPopContext();
             code;
         });
 

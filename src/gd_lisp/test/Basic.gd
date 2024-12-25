@@ -52,13 +52,16 @@ class KVPair_:
 		self.key = key
 		self.value = value
 
-class EnumValue:
+class EnumValue_:
 	var constructor
 	var args
 
 	func _init(constructor, args):
 		self.constructor = constructor
 		self.args = args
+
+	func match_list():
+		return [constructor] + args
 #########################################################################################################################################
 	
 func _initialize():
@@ -494,6 +497,29 @@ func _initialize():
 	assertEquals(0, 0)
 	assertEquals(1, 1)
 	################################
+
+	#(assertEq 5
+	#	(match 0.0
+	#		(5 0)
+	#		("5" 0)
+	#		(0 3)
+	#		(0.0 5)))
+	var _arg69 = 0.0
+	if _arg69 is EnumValue_:
+		_arg69 = _arg69.match_list()
+	var _arg68 = null
+	match _arg69:
+		5:
+			_arg68 = 0
+		"5":
+			_arg68 = 0
+		0:
+			_arg68 = 3
+		0.0:
+			_arg68 = 5
+	assertEquals(5, _arg68)
+	##############################
+
 
 	quit()
 #(func global_func [a b c]

@@ -52,20 +52,23 @@ class KVPair_:
 		self.key = key
 		self.value = value
 
-class EnumValue:
+class EnumValue_:
 	var constructor
 	var args
 
 	func _init(constructor, args):
 		self.constructor = constructor
 		self.args = args
+
+	func match_list():
+		return [constructor] + args
 #########################################################################################################################################
 
 #(enum Option
 #	(Some value)
 #	None)
 class Option:
-	extends EnumValue
+	extends EnumValue_
 	func _init(constructor, args):
 		super(constructor, args)
 	static func Some(value): return Option.new("Some", [value])
@@ -74,4 +77,25 @@ class Option:
 
 
 func _initialize():
+	#(var some (Option.Some "v"))
+	var some = Option.Some("v")
+	#############################
+
+	#(assertEq "v"
+	#	(match some
+	#		(None "not v")
+	#		((Some v) v)))
+	var _arg2 = some
+	if _arg2 is EnumValue_:
+		_arg2 = _arg2.match_list()
+	var _arg1 = null
+	match _arg2:
+		["None"]:
+			_arg1 = "not v"
+		["Some", var v]:
+			_arg1 = v
+	assertEquals("v", _arg1)
+	############################
+
+
 	quit()

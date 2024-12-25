@@ -49,10 +49,13 @@ class KVPair_:
 		self.key = key
 		self.value = value
 
-class EnumValue:
+class EnumValue_:
 	var constructor
 	var args
 
 	func _init(constructor, args):
 		self.constructor = constructor
 		self.args = args
+
+	func match_list():
+		return [constructor] + args
